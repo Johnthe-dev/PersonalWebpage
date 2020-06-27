@@ -7,14 +7,18 @@
             }
             .text {
             font-family: LibreBaskerville-Regular, Libre Baskerville;
+
             }
 
             #John{
             font-size: 180px;
+            font-weight: 500;
+            font-spacing: 1.1;
             }
 
             #the_Dev {
-            font-size: 115px;
+            font-size: 100px;
+            font-weight: 600;
             }
 
             .rectangles {
@@ -28,10 +32,10 @@
     <g id="logo" transform="translate(6.026)">
         <g id="Logo_Words" transform="translate(349)">
             <text id="John" class="text" transform="translate(26)" fill="currentcolor">
-                <tspan x="0" y="175">John</tspan>
+                <tspan x="0" y="190">John</tspan>
             </text>
-            <text id="the_Dev" class="text" transform="translate(0 336.72)" fill="currentcolor">
-                <tspan x="0" y="0">the Dev</tspan>
+            <text id="the_Dev" class="text" transform="translate(40 320.72)" fill="currentcolor">
+                <tspan x="0" y="-5">the Dev</tspan>
             </text>
         </g>
         <g id="Logo_Image" transform="translate(0 30.72)">
