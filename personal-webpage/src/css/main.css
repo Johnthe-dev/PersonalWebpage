@@ -1,0 +1,21 @@
+body {
+    font-family: 'Alata', sans-serif !important;
+    font-size: large !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Libre Baskerville', serif;
+}
+h1 {
+    font-size: x-large;
+}
+h2 {
+    font-size: larger;
+}
+h3 {
+    font-size: large;
+}
+
+#headerLogo {
+    height: 4em;
+}

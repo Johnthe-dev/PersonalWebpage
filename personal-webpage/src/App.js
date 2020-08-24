@@ -1,12 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import ReactDOM from 'react-dom';
+import {applyMiddleware, createStore} from "redux";
+import thunk from "redux-thunk";
+import {Provider} from 'react-redux';
+import './css/main.css';
+// import '../css/PersonalWebpage.scss';
+import icon from './images/icon.svg';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={icon} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
