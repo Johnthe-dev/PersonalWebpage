@@ -14,6 +14,8 @@ import {Container} from "react-bootstrap";
 import {Row} from "react-bootstrap";
 import {Col} from "react-bootstrap";
 import {Home} from "./pages/Home/Home";
+import {Header} from "./components/Header/Header";
+import {ContactMe} from "./pages/ContactMe/ContactMe";
 
 const store = createStore(applyMiddleware(thunk));
 const Routing = (store) => (
@@ -22,12 +24,15 @@ const Routing = (store) => (
             <BrowserRouter>
                 <Container fluid className={"bg-light"}>
                     <Row className={'sticky-top'}>
-                        {/*<Header/>*/}
+                        <Col className={'col-11 mx-5'}>
+                        <Header/>
+                        </Col>
                     </Row>
                     <Row>
-                        <Col  md={12} lg={10} id="page-content-wrapper" className={"bg-light"}>
+                        <Col className={"bg-light"}>
                             <Switch>
                                 <Route exact path="/" component={Home}/>
+                                <Route exact path='/ContactForm' component={ContactMe}/>
                             </Switch>
                         </Col>
                     </Row>

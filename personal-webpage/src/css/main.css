@@ -1,4 +1,13 @@
+/*$theme-colors: (*/
+/*"primary": #197BBD,*/
+/*"dark": #252422,*/
+/*"light": #FFFCF2,*/
+/*"secondary": #403D39,*/
+/*"info": #d67600,*/
+/*);*/
+
 body {
+    width: 100vw !important;
     font-family: 'Alata', sans-serif !important;
     font-size: large !important;
 }
@@ -17,5 +26,56 @@ h3 {
 }
 
 #headerLogo {
-    height: 4em;
+    height: 10vh;
+    min-height: 4em;
+}
+#johnPicture {
+    max-width: 70%;
+}
+#contactForm {
+    display: block;
+    margin: auto !important;
+    height: 30em;
+    border-radius: 2em;
+}
+#contactMessage {
+    display: block;
+    margin: auto !important;
+}
+.mainBg {
+  height: 85vh;
+}
+.systemMessage {
+    background: #d67600;
+    border-radius: 1em;
+}
+.userMessage {
+    background: #197BBD;
+    border-radius: 1em;
+}
+.loadingDots > span{
+    width:1rem;
+    height:1rem;
+    background-color: #403D39;
+    border-radius: 50%;
+    display: inline-block;
+}
+.loadingDots .loadOne{
+    animation: 1.5s appear infinite both;
+}
+.loadingDots .loadTwo{
+    animation: 1.5s appear infinite both;
+    animation-delay: .5s;
+}
+.loadingDots .loadThree{
+    animation: 1.5s appear infinite both;
+    animation-delay: 1s;
+}
+@keyframes appear {
+    40%,60%{
+        opacity: 0.5;
+    }
+    0%,100%{
+        opacity: 1;
+    }
 }
