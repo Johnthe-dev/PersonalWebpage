@@ -35,8 +35,9 @@ h3 {
 #contactForm {
     display: block;
     margin: auto !important;
-    height: 30em;
+    height: 75vh;
     border-radius: 2em;
+    border: solid 1em #197BBD;
 }
 #contactMessage {
     display: block;
@@ -78,4 +79,7 @@ h3 {
     0%,100%{
         opacity: 1;
     }
+}
+.overflowGone {
+    overflow: hidden;
 }

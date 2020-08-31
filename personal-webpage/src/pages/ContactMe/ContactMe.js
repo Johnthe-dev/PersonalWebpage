@@ -13,89 +13,79 @@ export const ContactMe = () => {
             'source': 'system'
         }
     ]);
+
+    const [show, setShow] = useState('d-none');
+    const [contact, setContact] = useState(false);
     const [message, setMessage] = useState("");
     const [order, setOrder] = useState(2);
-    const createMessageHandler = (source, message) => {
+    const phoneRegExp = RegExp(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/);
+    const responseGenerator = (source, message) => {
+        let response = '';
+        let lowerCaseMessage = message.toLowerCase();
+        let messageWords = lowerCaseMessage.split(" ");
+        if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
+            response += 'Hello to you too! '
+        }
+        if (lowerCaseMessage.includes('coffee')) {
+            response += 'John generally prefers tea, but he would love to meet up! '
+        }
+        if (lowerCaseMessage.includes('job') || lowerCaseMessage.includes('opportunity')) {
+            response += 'That sounds exciting! Can you tell me a bit more? '
+        }
+        let i;
+        for (i = 0; i < messageWords.length; i++) {
+            if (messageWords[i].includes('@')) {
+                response += 'I have recorded ' + messageWords[i] + ' as your email address. '
+                setContact(true);
+            }
+            console.log(phoneRegExp.test(messageWords[i]));
+            if (phoneRegExp.test(messageWords[i])) {
+                response += 'Is ' + messageWords[i] + ' a phone number? And if so, can it receive text messages? '
+                setContact(true);
+            }
+        }
+        if (order % 6 === 0) {
+            if (contact === true) {
+                response += 'I think I might have enough information, please respond with "Send Email" at any time to send this message, otherwise please continue! '
+            } else {
+                response+= 'Could you please supply me with an email address or phone number so John can get a hold of you? ';
+            }
+        }
         setMessages([...messages, {
             'order': order,
             'message': message,
             'source': source
         }]);
-        setOrder(order + 1);
-    }
-    const newMessageHandler = (source, message) => {
-        if (source === 'user') {
-            createMessageHandler(source, message);
-        } else if (source === 'system'){
-        createMessageHandler('system', 'System Message')}
+        if (response !== "") {
+            setShow('d-block');
+            setTimeout(() => {
+                setMessages([...messages, {
+                    'order': order,
+                    'message': message,
+                    'source': source
+                }, {
+                    'order': order + 1,
+                    'message': response,
+                    'source': 'system'
+                }]);
+                setShow('d-none');
+            }, 2000);
+        }
+        setMessage('');
+        setOrder(order + 2);
     }
     const changeHandler = (event) => {
         setMessage(event.target.value);
     }
-    const userRow = 'px-2 py-3 d-flex justify-content-end';
-    const systemRow = 'px-2 py-3';
+    const userRow = 'px-2 pb-3 d-flex justify-content-end';
+    const systemRow = 'px-2 pb-3';
     return (
         <Col className={'bg-secondary mainBg'}>
             <Row className={'pt-3'}>
                 <Col id={'contactForm'}
-                     className={'bg-light col-12-sm col-9-md col-6-lg col-3 border border-primary d-flex flex-column-reverse OverflowGone'}>
-                    {messages.sort((a, b) => {
-                        return b.order - a.order
-                    }).map((message) => {
-                        return (
-                            <Row className={message.source==='user'?userRow:systemRow}>
-                                <div className={'py-2 px-2 ' + message.source + 'Message'}>
-                                    {message.message}
-                                </div>
-                            </Row>
-                        )
-                    })
-                    }
-                    {/*<Row className={'px-2 py-3'}>*/}
-                    {/*    <div className={'py-2 px-2 systemMessage loadingDots'}>*/}
-                    {/*        <span className={'loadOne'}/><span className={'loadTwo'}/><span className={'loadThree'}/>*/}
-                    {/*    </div>*/}
-                    {/*</Row>*/}
-                    {/*<Row className={'px-2 py-3 '}>*/}
-                    {/*    <div className={'py-2 px-2 systemMessage'}>*/}
-                    {/*        That sounds interesting, care to tell me more information?*/}
-                    {/*    </div>*/}
-                    {/*</Row>*/}
-                    {/*<Row className={'px-2 py-3 d-flex justify-content-end'}>*/}
-                    {/*    <div className={'py-2 px-2 userMessage'}>*/}
-                    {/*        Hello! I was wondering if you'd like to meet up about an opportunity!*/}
-                    {/*    </div>*/}
-                    {/*</Row>*/}
-                    {/*<Row className={'px-2 py-3 '}>*/}
-                    {/*    <div className={'py-2 px-2 systemMessage'}>*/}
-                    {/*    What would you like to talk about?*/}
-                    {/*    </div>*/}
-                    {/*</Row>*/}
-                    {/*<Row className={'px-2 py-3 '}>*/}
-                    {/*    <div className={'py-2 px-2 systemMessage'}>*/}
-                    {/*        Hello! I'll send a message to John for you!*/}
-                    {/*    </div>*/}
-                    {/*</Row>*/}
-                    {/*<Row>*/}
-                    {/*    <form onSubmit={()=>{newMessageHandler(message)}}>*/}
-                    {/*        <Row className={'bg-light py-1 border-bottom border-dark mx-0'}>*/}
-                    {/*            <Col><input*/}
-                    {/*                className="form-control"*/}
-                    {/*                id="message"*/}
-                    {/*                type="text"*/}
-                    {/*                value={message}*/}
-                    {/*                placeholder=""*/}
-                    {/*                onChange={changeHandler}*/}
-                    {/*            /></Col>*/}
-                    {/*        </Row>*/}
-                    {/*    </form>*/}
-                    {/*</Row>*/}
-                </Col>
-            </Row>
-            <Row className={'pt-3'}>
-                <Col id={'contactMessage'} className={'col-12-sm col-9-md col-6-lg col-3'}>
-                    <Row>
-                        <Col className={'col-8'}>
+                     className={'bg-light col-12-sm col-9-md col-6-lg col-3 d-flex flex-column-reverse overflowGone'}>
+                    <Row className={'border-top border-dark py-4 bg-primary'}>
+                        <Col className={'col-8 pr-1'}>
                             <input
                                 className="form-control"
                                 id="message"
@@ -103,16 +93,57 @@ export const ContactMe = () => {
                                 value={message}
                                 placeholder=""
                                 onChange={changeHandler}
+                                onKeyDown={(e) => e.key === 'Enter' && responseGenerator('user', message)}
                             />
                         </Col>
                         <Col className={'col-4'}>
                             <Button variant='success' onClick={() => {
-                                newMessageHandler('user', message)
+                                responseGenerator('user', message)
                             }}>Send</Button>
                         </Col>
                     </Row>
+                    <Row className={'px-2 pb-3 ' + show}>
+                        <div className={'py-2 px-2 col-3 systemMessage loadingDots'}>
+                            <span className={'loadOne'}/><span className={'loadTwo'}/><span className={'loadThree'}/>
+                        </div>
+                    </Row>
+                    {messages.sort((a, b) => {
+                        return b.order - a.order
+                    }).map((message) => {
+                        return (
+                            <Row className={message.source === 'user' ? userRow : systemRow}>
+                                <div className={'py-2 px-3 ' + message.source + 'Message'}>
+                                    {message.message}
+                                </div>
+                            </Row>
+                        )
+                    })
+                    }
+
                 </Col>
             </Row>
+            {/*<Row className={'pt-3'}>*/}
+            {/*    <Col id={'contactMessage'} className={'col-12-sm col-9-md col-6-lg col-3'}>*/}
+            {/*        <Row>*/}
+            {/*            <Col className={'col-8'}>*/}
+            {/*                <input*/}
+            {/*                    className="form-control"*/}
+            {/*                    id="message"*/}
+            {/*                    type="text"*/}
+            {/*                    value={message}*/}
+            {/*                    placeholder=""*/}
+            {/*                    onChange={changeHandler}*/}
+            {/*                    onKeyDown={(e) => e.key === 'Enter' && responseGenerator('user', message)}*/}
+            {/*                />*/}
+            {/*            </Col>*/}
+            {/*            <Col className={'col-4'}>*/}
+            {/*                <Button variant='success' onClick={() => {*/}
+            {/*                    responseGenerator('user', message)*/}
+            {/*                }}>Send</Button>*/}
+            {/*            </Col>*/}
+            {/*        </Row>*/}
+            {/*    </Col>*/}
+            {/*</Row>*/}
         </Col>
 
     )
