@@ -83,7 +83,7 @@ export const ContactMe = () => {
         <Col className={'bg-secondary mainBg'}>
             <Row className={'pt-3'}>
                 <Col id={'contactForm'}
-                     className={'bg-light col-12-sm col-9-md col-6-lg col-3 d-flex flex-column-reverse overflowGone'}>
+                     className={'bg-light col-sm-8 col-md-6 col-lg-5 col-xl-3 d-flex flex-column-reverse overflowGone'}>
                     <Row className={'border-top border-dark py-4 bg-primary'}>
                         <Col className={'col-8 pr-1'}>
                             <input
