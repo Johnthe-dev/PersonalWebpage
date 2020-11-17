@@ -24,8 +24,8 @@ const Routing = (store) => (
         <Provider store={store}>
             <BrowserRouter>
                 <Container fluid className={"bg-light"}>
-                    <Row className={'sticky-top'}>
-                        <Col className={'col-11 mx-5'}>
+                    <Row className={'sticky-top d-flex align-items-center'}>
+                        <Col>
                         <Header/>
                         </Col>
                     </Row>
