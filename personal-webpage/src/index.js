@@ -16,6 +16,7 @@ import {Col} from "react-bootstrap";
 import {Home} from "./pages/Home/Home";
 import {Header} from "./components/Header/Header";
 import {ContactMe} from "./pages/ContactMe/ContactMe";
+import {Portfolio} from "./pages/Portfolio/Portfolio";
 
 const store = createStore(applyMiddleware(thunk));
 const Routing = (store) => (
@@ -33,6 +34,7 @@ const Routing = (store) => (
                             <Switch>
                                 <Route exact path="/" component={Home}/>
                                 <Route exact path='/ContactForm' component={ContactMe}/>
+                                <Route exact path='/HireMe' component={Portfolio}/>
                             </Switch>
                         </Col>
                     </Row>

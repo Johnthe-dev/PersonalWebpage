@@ -83,3 +83,11 @@ h3 {
 .overflowGone {
     overflow: hidden;
 }
+
+.logo-icon{
+    width: 15vw !important;
+    height: auto;
+}
+.logo-card{
+    border-top: solid .2em #d67600;
+}
