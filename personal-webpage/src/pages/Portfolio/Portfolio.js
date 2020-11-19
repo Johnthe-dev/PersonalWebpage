@@ -7,6 +7,8 @@ import mysqlIcon from "../../images/mysql-logo.png"
 import linuxIcon from "../../images/linux-logo.png"
 import githubIcon from "../../images/github-logo.png"
 import xdIcon from "../../images/xd-icon.png"
+import NMSavin from "../../images/NMSavin.png"
+import ABQVeterans from "../../images/ABQVeterans.png"
 import resume from "../../resume/Resume.pdf"
 
 export const Portfolio = () => {
@@ -17,7 +19,7 @@ export const Portfolio = () => {
             </Row>
             <Row className={"pb-3 d-flex align-items-center justify-content-around"}>
                 <NavLink href={'#technologies'}>Technologies</NavLink>
-                <NavLink>Projects</NavLink>
+                <NavLink href={'#projects'}>Projects</NavLink>
                 <NavLink>Awards</NavLink>
                 <NavLink href={resume} download={resume}>Resume</NavLink>
             </Row>
@@ -135,8 +137,77 @@ export const Portfolio = () => {
                     </Row>
                 </Col>
             </Row>
-            <Row className={"pt-3 d-flex align-items-center justify-content-around"}>
-
+            <span id={'projects'}/>
+            <Row className={"pb-3 pt-5 justify-content-around"}>
+                <h3>Projects</h3>
+            </Row>
+            <Row className={"py-5 d-flex justify-content-around align-content-center"}>
+                <Col className="col-12 col-md-4 px-0 mx-0">
+                    <div className="hover-effect">
+                        <img className="img-responsive" src={NMSavin} alt="Screen shot of NMSavin"/>
+                            <div className="overlay">
+                                <h2>NMSAVIN</h2>
+                                <a className="info" href="#">Learn More</a>
+                            </div>
+                    </div>
+                </Col>
+                <Col>
+                    <h4 className={'pb-4 px-4'}>Victim Notification System</h4>
+                    <p className={'pl-3 text-wrap'}>NMSAVIN was built to help New Mexicans stay updated on criminal
+                    cases that are important to them. Unfortunately it was outdated and inconsistent. My first professional
+                    project was a redesign and rebuild of a tool used to help keep our community safe.</p>
+                </Col>
+            </Row>
+            <Row className={"py-5 d-flex justify-content-around align-content-center"}>
+                <Col>
+                    <h4 className={'pb-4 px-2'}>Victim Notification System</h4>
+                    <p className={'pr-3 text-wrap'}>NMSAVIN was built to help New Mexicans stay updated on criminal
+                        cases that are important to them. Unfortunately it was outdated and inconsistent. My first professional
+                        project was a redesign and rebuild of a tool used to help keep our community safe.</p>
+                </Col>
+                <Col className="col-12 col-md-4 px-0 mx-0">
+                    <div className="hover-effect">
+                        <img className="img-responsive" src={ABQVeterans} alt="Screen shot of ABQ Veterans"/>
+                        <div className="overlay">
+                            <h2>ABQVeterans</h2>
+                            <a className="info" href="#">Learn More</a>
+                        </div>
+                    </div>
+                </Col>
+            </Row>
+            <Row className={"py-5 d-flex justify-content-around align-content-center"}>
+                <Col className="col-12 col-md-4 px-0 mx-0">
+                    <div className="hover-effect">
+                        <img className="img-responsive" src={NMSavin} alt="Screen shot of NMSavin"/>
+                        <div className="overlay">
+                            <h2>NMSAVIN</h2>
+                            <a className="info" href="#">Learn More</a>
+                        </div>
+                    </div>
+                </Col>
+                <Col>
+                    <h4 className={'pb-4 px-4'}>Victim Notification System</h4>
+                    <p className={'pl-3 text-wrap'}>NMSAVIN was built to help New Mexicans stay updated on criminal
+                        cases that are important to them. Unfortunately it was outdated and inconsistent. My first professional
+                        project was a redesign and rebuild of a tool used to help keep our community safe.</p>
+                </Col>
+            </Row>
+            <Row className={"py-5 d-flex justify-content-around align-content-center"}>
+                <Col>
+                    <h4 className={'pb-4 px-2'}>Victim Notification System</h4>
+                    <p className={'pr-3 text-wrap'}>NMSAVIN was built to help New Mexicans stay updated on criminal
+                        cases that are important to them. Unfortunately it was outdated and inconsistent. My first professional
+                        project was a redesign and rebuild of a tool used to help keep our community safe.</p>
+                </Col>
+                <Col className="col-12 col-md-4 px-0 mx-0">
+                    <div className="hover-effect">
+                        <img className="img-responsive" src={ABQVeterans} alt="Screen shot of ABQ Veterans"/>
+                        <div className="overlay">
+                            <h2>ABQVeterans</h2>
+                            <a className="info" href="#">Learn More</a>
+                        </div>
+                    </div>
+                </Col>
             </Row>
         </Container>
     )
