@@ -28,7 +28,7 @@ export const Portfolio = () => {
                     <p>I am John Johnson-Rodgers, a web developer based out of Albuquerque, New Mexico. I am interested
                         in
                         projects that will have positive social impacts on our community. I take pride in my work and
-                        thrive<span id={'technologies'}/>
+                        thrive{' '}<span id={'technologies'}/>
                         while taking on challenging tasks. Message me if you are interested in working together.</p>
                 </Col>
             </Row>
