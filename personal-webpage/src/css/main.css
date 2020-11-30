@@ -86,6 +86,7 @@ h3 {
 
 .logo-icon{
     width: 15vw !important;
+    min-width: 200px;
     height: auto;
 }
 .logo-card{
