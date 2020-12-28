@@ -1,4 +1,4 @@
-/*$theme-colors: (*/
+@import url("https://fonts.googleapis.com/css?family=Libre+Baskerville:regular"); /*$theme-colors: (*/
 /*"primary": #197BBD,*/
 /*"dark": #252422,*/
 /*"light": #FFFCF2,*/
@@ -179,4 +179,28 @@ h3 {
 .hover-effect:hover a.info {
     -webkit-transition-delay:.2s;
     transition-delay:.2s;
+}
+
+#logo {
+    color: inherit;
+}
+.text {
+    font-family: LibreBaskerville-Regular, Libre Baskerville, serif;
+
+}
+
+#John{
+    font-size: 36px;
+    font-weight: 500;
+}
+
+#the_Dev {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.rectangles {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-width: 1px;
 }

@@ -16,38 +16,45 @@
 
         </style>
     </defs>
-<g id="Logo_Image" transform="translate(0 30.72)">
-    <g id="Rectangle_1"  class="rectangles" transform="translate(92.1)" stroke="currentcolor">
-        <rect width="125" height="125"/>
-        <rect x="-2.5" y="-2.5" width="130" height="130"/>
+    <g id="Logo_Image" transform="translate(0 30.72)">
+        <g id="Rectangle_1" class="rectangles" transform="translate(92.1)" stroke="currentcolor">
+            <rect width="125" height="125"/>
+            <rect x="-2.5" y="-2.5" width="130" height="130"/>
+        </g>
+        <g id="Rectangle_2" class="rectangles" transform="translate(89.5 1.5) rotate(45)"
+           stroke="currentcolor">
+            <rect width="125" height="125"/>
+            <rect x="-2.5" y="-2.5" width="130" height="130"/>
+        </g>
+        <g id="Rectangle_3" class="rectangles" transform="translate(220 1.5) rotate(45)"
+           stroke="currentcolor">
+            <rect width="125" height="125"/>
+            <rect x="-2.5" y="-2.5" width="130" height="130"/>
+        </g>
+        <g id="Rectangle_4" class="rectangles" transform="translate(184.5 92.1)"
+           stroke="currentcolor">
+            <rect width="125" height="125"/>
+            <rect x="-2.5" y="-2.5" width="130" height="130"/>
+        </g>
+        <g id="Rectangle_5" class="rectangles" transform="translate(92.1 184.5)"
+           stroke="currentcolor">
+            <rect width="125" height="125"/>
+            <rect x="-2.5" y="-2.5" width="130" height="130"/>
+        </g>
+        <g id="Rectangle_6" class="rectangles" transform="translate(220 131) rotate(45)"
+           stroke="currentcolor">
+            <rect width="125" height="125"/>
+            <rect x="-2.5" y="-2.5" width="130" height="130"/>
+        </g>
+        <g id="Rectangle_7" class="rectangles" transform="translate(89.5 131) rotate(45)"
+           stroke="currentcolor">
+            <rect width="125" height="125"/>
+            <rect x="-2.5" y="-2.5" width="130" height="130"/>
+        </g>
+        <g id="Rectangle_8" class="rectangles" transform="translate(0 92.075)"
+           stroke="currentcolor">
+            <rect width="125" height="125"/>
+            <rect x="-2.5" y="-2.5" width="130" height="130"/>
+        </g>
     </g>
-    <g id="Rectangle_2" class="rectangles" transform="translate(177.877 89.488) rotate(135)" stroke="currentcolor">
-        <rect width="125" height="125"/>
-        <rect x="-2.5" y="-2.5" width="130" height="130"/>
-    </g>
-    <g id="Rectangle_3" class="rectangles" transform="translate(219.712 1.1) rotate(45)" stroke="currentcolor">
-        <rect width="125" height="125"/>
-        <rect x="-2.5" y="-2.5" width="130" height="130"/>
-    </g>
-    <g id="Rectangle_4" class="rectangles" transform="translate(184.145 92.075)" stroke="currentcolor">
-        <rect width="125" height="125"/>
-        <rect x="-2.5" y="-2.5" width="130" height="130"/>
-    </g>
-    <g id="Rectangle_5"  class="rectangles" transform="translate(92.145 184.15)" stroke="currentcolor">
-        <rect width="125" height="125"/>
-        <rect x="-2.5" y="-2.5" width="130" height="130"/>
-    </g>
-    <g id="Rectangle_6" class="rectangles" transform="translate(131.268 219.662) rotate(-45)" stroke="currentcolor">
-        <rect width="125" height="125"/>
-        <rect x="-2.5" y="-2.5" width="130" height="130"/>
-    </g>
-    <g id="Rectangle_7" class="rectangles" transform="translate(89.433 308.05) rotate(-135)" stroke="currentcolor">
-        <rect width="125" height="125"/>
-        <rect x="-2.5" y="-2.5" width="130" height="130"/>
-    </g>
-    <g id="Rectangle_8" class="rectangles" transform="translate(0 92.075)" stroke="currentcolor">
-        <rect width="125" height="125"/>
-        <rect x="-2.5" y="-2.5" width="130" height="130"/>
-    </g>
-</g>
 </svg>
