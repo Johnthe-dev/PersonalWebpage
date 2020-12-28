@@ -17,6 +17,7 @@ import {Home} from "./pages/Home/Home";
 import {Header} from "./components/Header/Header";
 import {ContactMe} from "./pages/ContactMe/ContactMe";
 import {Portfolio} from "./pages/Portfolio/Portfolio";
+import {Testing} from "./pages/Testing/Testing"
 
 const store = createStore(applyMiddleware(thunk));
 const Routing = (store) => (
@@ -35,6 +36,7 @@ const Routing = (store) => (
                                 <Route exact path="/" component={Home}/>
                                 <Route exact path='/ContactForm' component={ContactMe}/>
                                 <Route exact path='/HireMe' component={Portfolio}/>
+                                <Route exact path='/Testing' component={Testing}/>
                             </Switch>
                         </Col>
                     </Row>
