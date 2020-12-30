@@ -4,9 +4,10 @@ import {motion} from "framer-motion";
 
 export const Header = () => {
     let svgVariance = {};
+    const viewed = sessionStorage.getItem('viewed');
     let logoIconRoll = {
         hidden: {
-            rotate: -180,
+            rotate: !viewed?0:-180,
             x: 20.7,
             y: 3.072
         },
@@ -20,8 +21,6 @@ export const Header = () => {
             }
         }
     };
-    const viewed = sessionStorage.getItem('viewed');
-    console.log(viewed);
     let rectangles = (number)=>{
             return {
                 hidden:{
@@ -30,7 +29,9 @@ export const Header = () => {
                 visible:{
                     opacity: 1,
                     transition: {
-                        delay: number/4
+                        delay: number/4,
+                        duration:1,
+                        ease: 'easeInOut'
                     }
                 }
             };
