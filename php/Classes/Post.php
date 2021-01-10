@@ -7,15 +7,14 @@ require_once(dirname(__DIR__) . "/Classes/autoload.php");
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 
-/*
- * Class postLog for NM SAVIN
+/**
+ * Class post will store the entries in the knowledge system
  * @package JohnTheDev
  *
  * Description: This class will hold the posts for JohnThe.dev.
  *
  * @author John Johnson-Rogers <john@johnthe.dev>
  */
-
 class Post implements \JsonSerializable
 {
     use ValidateDate;
@@ -458,7 +457,6 @@ class Post implements \JsonSerializable
         if ($this->postDate !== null) {
             $fields["postDate"] = $this->postDate->format("Y-m-d H:i:s");
         }
-
         return ($fields);
     }
 }
