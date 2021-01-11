@@ -39,25 +39,43 @@ export const Header = () => {
     let lines = (line, square)=>{
         let number = 0;
         switch (line){
-            case 'outer':
-                number = 1*square;
-                break;
             case 'positive':
-                number = 2*square;
+                if(square%2!==0){
+                    number = 2
+                } else {
+                    number = 7
+                }
                 break;
             case 'inner':
-                number = 3*square;
+                if(square%2!==0){
+                    number = 3
+                } else {
+                    number = 8
+                }
                 break;
             case 'negative':
-                number = 4*square;
+                if(square%2!==0){
+                    number = 4
+                } else {
+                    number = 9
+                }
+                break;
+            case 'outer':
+                if(square%2!==0){
+                    number = 5
+                } else {
+                    number = 10
+                }
                 break;
         }
         return {
             hidden:{
-                opacity: viewed?0:1
+                opacity: viewed?0:1,
+                strokeDasharray:0
             },
             visible:{
                 opacity: 1,
+                strokeDasharray: 100,
                 transition: {
                     delay: number/4,
                     duration:1,
@@ -79,54 +97,54 @@ export const Header = () => {
     const logo = <motion.svg xmlns="http://www.w3.org/2000/svg" width={scaleSvg(100)} height={scaleSvg(30)} variants={svgVariance}
                              initial={'hidden'} animate={'visible'}>
         <motion.g id="Logo_Image" transform="" variants={logoIconRoll}>
-                <motion.g id="Rectangle_1" variants={rectangles(1)}>{/*Middle Left*/}
-                    <motion.line variants={lines('outer', 1)} x1={scaleSvg(5)} x2={scaleSvg(5)} y1={scaleSvg(9.92)} y2={scaleSvg(20.08)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                    <motion.line variants={lines('positive', 1)} x1={scaleSvg(5)} x2={scaleSvg(15)} y1={scaleSvg(10)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                    <motion.line variants={lines('inner', 1)} x1={scaleSvg(15)} x2={scaleSvg(15)} y1={scaleSvg(10)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                    <motion.line variants={lines('negative', 1)} x1={scaleSvg(5)} x2={scaleSvg(15)} y1={scaleSvg(20)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
-                </motion.g>
-            <motion.g id="Rectangle_2" variants={rectangles(2)}>{/*Top Left*/}
-                    <motion.line variants={lines('outer', 2)} x1={scaleSvg(4.92)} x2={scaleSvg(5.08, 1)} y1={scaleSvg(10.08)} y2={scaleSvg(9.92, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                    <motion.line variants={lines('positive', 2)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(10,-1)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                    <motion.line variants={lines('negative', 2)} x1={scaleSvg(5)} x2={scaleSvg(5, 1)} y1={scaleSvg(10)} y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
-                    <motion.line variants={lines('inner', 2)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(10,1)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-            </motion.g>
+                {/*<motion.g id="Rectangle_1" variants={rectangles(1)}>/!*Middle Left*!/*/}
+                {/*    <motion.line variants={lines('outer', 1)} x1={scaleSvg(5)} x2={scaleSvg(5)} y1={scaleSvg(20.08)} y2={scaleSvg(9.92)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Outer*!/*/}
+                {/*    <motion.line variants={lines('positive', 1)} x1={scaleSvg(5)} x2={scaleSvg(15)} y1={scaleSvg(10)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Positive*!/*/}
+                {/*    <motion.line variants={lines('inner', 1)} x1={scaleSvg(15)} x2={scaleSvg(15)} y1={scaleSvg(10)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Inner*!/*/}
+                {/*    <motion.line variants={lines('negative', 1)} x1={scaleSvg(15)} x2={scaleSvg(5)} y1={scaleSvg(20)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Negative*!/*/}
+                {/*</motion.g>*/}
+            {/*<motion.g id="Rectangle_2" variants={rectangles(2)}>/!*Top Left*!/*/}
+            {/*        <motion.line variants={lines('outer', 2)} x1={scaleSvg(4.92)} x2={scaleSvg(5.08, 1)} y1={scaleSvg(10.08)} y2={scaleSvg(9.92, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Outer*!/*/}
+            {/*        <motion.line variants={lines('positive', 2)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(10,-1)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Positive*!/*/}
+            {/*        <motion.line variants={lines('negative', 2)} x2={scaleSvg(5)} x1={scaleSvg(5, 1)} y2={scaleSvg(10)} y1={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Negative*!/*/}
+            {/*        <motion.line variants={lines('inner', 2)} x2={scaleSvg(5, 1)} x1={scaleSvg(5, 2)} y2={scaleSvg(10,1)} y1={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Inner*!/*/}
+            {/*</motion.g>*/}
             <motion.g id="Rectangle_3" variants={rectangles(3)}>{/*Top Middle*/}
                 <motion.line variants={lines('outer', 3)} x1={scaleSvg(15.08, 1)} x2={scaleSvg(4.92, 1)} y1={scaleSvg(10, -1)} y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
                 <motion.line variants={lines('positive', 3)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 1)} y1={scaleSvg(20, -1)} y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
                 <motion.line variants={lines('inner', 3)} x1={scaleSvg(15, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(20, -1)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
                 <motion.line variants={lines('negative', 3)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(20, -1)} y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
             </motion.g>
-            <motion.g id="Rectangle_4" variants={rectangles(4)}>{/*Top Right*/}
-                <motion.line variants={lines('outer', 4)} x1={scaleSvg(14.92, 1)} x2={scaleSvg(15.08, 2)} y1={scaleSvg(9.92,-1)} y2={scaleSvg(10.08)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 4)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 2)} y1={scaleSvg(10,1)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 4)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(10)} y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 4)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(10)} y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
-            </motion.g>
-            <motion.g id="Rectangle_5" variants={rectangles(5)}>{/*Middle Right*/}
-                <motion.line variants={lines('outer', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(15, 2)} y1={scaleSvg(9.92)} y2={scaleSvg(20.08)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(5, 2)} y1={scaleSvg(20)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 5)} x1={scaleSvg(5, 2)} x2={scaleSvg(5, 2)} y1={scaleSvg(10)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(5, 2)} y1={scaleSvg(10)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
-            </motion.g>
-            <motion.g id="Rectangle_6" variants={rectangles(6)}>{/*Bottom Right*/}
-                <motion.line variants={lines('outer', 6)} x1={scaleSvg(14.92, 1)} x2={scaleSvg(15.08, 2)} y1={scaleSvg(20.08,1)} y2={scaleSvg(19.92)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 6)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(20)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 6)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(20)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 6)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 2)} y1={scaleSvg(20,-1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
-            </motion.g>
-            <motion.g id="Rectangle_7" variants={rectangles(7)}>{/*Bottom Middle*/}
-                    <motion.line variants={lines('outer', 7)} x1={scaleSvg(15.08, 1)} x2={scaleSvg(4.92, 1)} y1={scaleSvg(20, 1)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                    <motion.line variants={lines('positive', 7)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(10, 1)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                    <motion.line variants={lines('inner', 7)} x1={scaleSvg(15, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(10, 1)} y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                    <motion.line variants={lines('negative', 7)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 1)} y1={scaleSvg(10, 1)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
-            </motion.g>
-            <motion.g id="Rectangle_8" variants={rectangles(8)}>{/*Bottom Left*/}
-                <motion.line variants={lines('outer', 8)} x1={scaleSvg(4.92)} x2={scaleSvg(5.08, 1)} y1={scaleSvg(19.92)} y2={scaleSvg(20.08, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 8)} x1={scaleSvg(5)} x2={scaleSvg(5, 1)} y1={scaleSvg(20)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 8)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(20,-1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 8)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(20,1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
-            </motion.g>
+            {/*<motion.g id="Rectangle_4" variants={rectangles(4)}>/!*Top Right*!/*/}
+            {/*    <motion.line variants={lines('outer', 4)} x1={scaleSvg(14.92, 1)} x2={scaleSvg(15.08, 2)} y1={scaleSvg(9.92,-1)} y2={scaleSvg(10.08)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Outer*!/*/}
+            {/*    <motion.line variants={lines('positive', 4)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 2)} y1={scaleSvg(10,1)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Positive*!/*/}
+            {/*    <motion.line variants={lines('inner', 4)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(10)} y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Inner*!/*/}
+            {/*    <motion.line variants={lines('negative', 4)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(10)} y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Negative*!/*/}
+            {/*</motion.g>*/}
+            {/*<motion.g id="Rectangle_5" variants={rectangles(5)}>/!*Middle Right*!/*/}
+            {/*    <motion.line variants={lines('outer', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(15, 2)} y1={scaleSvg(9.92)} y2={scaleSvg(20.08)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Outer*!/*/}
+            {/*    <motion.line variants={lines('positive', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(5, 2)} y1={scaleSvg(20)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Positive*!/*/}
+            {/*    <motion.line variants={lines('inner', 5)} x1={scaleSvg(5, 2)} x2={scaleSvg(5, 2)} y1={scaleSvg(10)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Inner*!/*/}
+            {/*    <motion.line variants={lines('negative', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(5, 2)} y1={scaleSvg(10)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Negative*!/*/}
+            {/*</motion.g>*/}
+            {/*<motion.g id="Rectangle_6" variants={rectangles(6)}>/!*Bottom Right*!/*/}
+            {/*    <motion.line variants={lines('outer', 6)} x1={scaleSvg(14.92, 1)} x2={scaleSvg(15.08, 2)} y1={scaleSvg(20.08,1)} y2={scaleSvg(19.92)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Outer*!/*/}
+            {/*    <motion.line variants={lines('positive', 6)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(20)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Positive*!/*/}
+            {/*    <motion.line variants={lines('inner', 6)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(20)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Inner*!/*/}
+            {/*    <motion.line variants={lines('negative', 6)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 2)} y1={scaleSvg(20,-1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Negative*!/*/}
+            {/*</motion.g>*/}
+            {/*<motion.g id="Rectangle_7" variants={rectangles(7)}>/!*Bottom Middle*!/*/}
+            {/*        <motion.line variants={lines('outer', 7)} x1={scaleSvg(15.08, 1)} x2={scaleSvg(4.92, 1)} y1={scaleSvg(20, 1)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Outer*!/*/}
+            {/*        <motion.line variants={lines('positive', 7)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(10, 1)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Positive*!/*/}
+            {/*        <motion.line variants={lines('inner', 7)} x1={scaleSvg(15, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(10, 1)} y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Inner*!/*/}
+            {/*        <motion.line variants={lines('negative', 7)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 1)} y1={scaleSvg(10, 1)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Negative*!/*/}
+            {/*</motion.g>*/}
+            {/*<motion.g id="Rectangle_8" variants={rectangles(8)}>/!*Bottom Left*!/*/}
+            {/*    <motion.line variants={lines('outer', 8)} x1={scaleSvg(4.92)} x2={scaleSvg(5.08, 1)} y1={scaleSvg(19.92)} y2={scaleSvg(20.08, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Outer*!/*/}
+            {/*    <motion.line variants={lines('positive', 8)} x1={scaleSvg(5)} x2={scaleSvg(5, 1)} y1={scaleSvg(20)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Positive*!/*/}
+            {/*    <motion.line variants={lines('inner', 8)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(20,-1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Inner*!/*/}
+            {/*    <motion.line variants={lines('negative', 8)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(20,1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>/!*Negative*!/*/}
+            {/*</motion.g>*/}
         </motion.g>
         <g id="Logo_Words" transform={"translate("+scaleSvg(30)+")"}>
             <text id="John" className="text" transform={"translate("+scaleSvg(15.6)+" "+scaleSvg(11)+")"} fill="#252422">
