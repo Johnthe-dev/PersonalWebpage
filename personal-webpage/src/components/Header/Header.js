@@ -3,67 +3,63 @@ import React, {useState, useEffect} from "react";
 import {motion} from "framer-motion";
 
 export const Header = () => {
-    let svgVariance = {};
-    const scaleFactor=3;
+    const scaleFactor = 3;
     const viewed = sessionStorage.getItem('viewed');
+    const [logoAnimate, setLogoAnimate] = useState({});
     let logoIconRoll = {
-        // hidden: {
-        //     rotate: !viewed?0:-180,
-        //     x: 20.7,
-        //     y: 3.072
-        // },
-        // visible: {
-        //     rotate: 0,
-        //     x: 20.7,
-        //     y: 3.072,
-        //     transition: {
-        //         duration: 2,
-        //         ease: 'easeInOut'
-        //     }
-        // }
+        hidden: {
+            rotate: !viewed ? 0 : -180
+        },
+        visible: {
+            rotate: 0,
+            transition: {
+                duration: 2,
+                ease: 'easeInOut'
+            }
+        }
     };
-    let rectangles = (number)=>{
-            return {
-                hidden:{
-                    opacity: !viewed?0:1
-                },
-                visible:{
-                    opacity: 1,
-                    transition: {
-                        delay: number/4,
-                        duration:.5,
-                        ease: 'easeInOut'
-                    }
+    let rectangles = (number) => {
+        return {
+            hidden: {
+                opacity: 0
+            },
+            visible: {
+                opacity: 1,
+                transition: {
+                    delay: number / 4,
+                    duration: .5,
+                    ease: 'easeInOut'
                 }
-            };
+            }
+        };
     };
 
-    let lines = (line, square)=>{
+    let lines = (line, square) => {
         let number = 0;
-        switch (line){
+        switch (line) {
             case 'positive':
-                if(square%2!==0){
+                if (square % 2 !== 0) {
                     number = 2
                 } else {
                     number = 6
                 }
                 break;
             case 'inner':
-                if(square%2!==0){
+                if (square % 2 !== 0) {
                     number = 3
                 } else {
                     number = 7
                 }
                 break;
             case 'negative':
-                if(square%2!==0){
+                if (square % 2 !== 0) {
                     number = 4
                 } else {
                     number = 8
                 }
                 break;
             case 'outer':
-                if(square%2!==0){
+                if (square % 2 !== 0) {
                     number = 5
                 } else {
                     number = 9
@@ -71,27 +67,59 @@ export const Header = () => {
                 break;
         }
         return {
-            hidden:{
-                strokeDasharray:1000,
-                strokeDashoffset:1000
+            hidden: {
+                strokeDasharray: 1000,
+                strokeDashoffset: 1000
             },
-            visible:{
-            strokeDashoffset:0,
+            visible: {
+                strokeDashoffset: 0,
                 transition: {
-                    delay: number/4,
-                    duration:2,
+                    delay: number / 4,
+                    duration: 2,
                     ease: 'easeInOut'
                 }
             }
         };
     };
-    const animationStyle = (type, square, lines)=>{
-        if(type === 'square'){
-
-        } else if(type === 'lines'){
-
+    const animation = (location, line, square) => {
+        console.log(viewed);
+        if (!viewed) {
+            if (location === 'logo') {
+                return logoIconRoll;
+            } else {
+                return {
+                    hidden: {},
+                    visible: {}
+                };
+            }
+        } else {
+            if (location === 'lines') {
+                return lines(line, square);
+                // return {
+                //     hidden: {},
+                //     visible: {}
+                // };
+            } else if (location === 'rectangles') {
+                // return rectangles(line);
+                return {
+                    hidden: {},
+                    visible: {}
+                };
+            } else if (location === 'logo') {
+                return {
+                    hidden: {},
+                    visible: {}
+                };
+            }
         }
-        !viewed?rectangles:lines
+    }
+    const navigate = () => {
+        setLogoAnimate({
+            x: 1000, rotate: 720, transition: {
+                duration: 2,
+                ease: 'easeInOut'
+            }
+        });
     }
     const PageActive = useState({
         'Home': false,
@@ -99,66 +127,165 @@ export const Header = () => {
         'Contact Me': false,
         'Blog': false
     });
-    const scaleSvg = (number, row=0)=>{
-        return (number+10*row/Math.sqrt(2))*scaleFactor;
+    const scaleSvg = (number, row = 0) => {
+        return (number + 10 * row / Math.sqrt(2)) * scaleFactor;
     }
-    const logo = <motion.svg xmlns="http://www.w3.org/2000/svg" width={scaleSvg(100)} height={scaleSvg(30)} variants={svgVariance}
+    const logo = <motion.svg xmlns="http://www.w3.org/2000/svg" width={scaleSvg(100)} height={scaleSvg(30)}
                              initial={'hidden'} animate={'visible'}>
-        <motion.g id="Logo_Image" transform="" variants={logoIconRoll}>
-            <motion.g id="Rectangle_1" variants={rectangles(1)}>{/*Middle Left*/}
-                <motion.line variants={lines('outer', 1)} x1={scaleSvg(5)} x2={scaleSvg(5)} y1={scaleSvg(20.08)} y2={scaleSvg(9.92)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 1)} x1={scaleSvg(5)} x2={scaleSvg(15)} y1={scaleSvg(10)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 1)} x1={scaleSvg(15)} x2={scaleSvg(15)} y1={scaleSvg(10)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 1)} x1={scaleSvg(15)} x2={scaleSvg(5)} y1={scaleSvg(20)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
+        <motion.g id="Logo_Image" transform="" variants={animation('logo')} animate={logoAnimate}>
+            <motion.g id="Rectangle_1" variants={animation('rectangles', 1)}>{/*Middle Left*/}
+                <motion.line variants={animation('lines', 'outer', 1)} x1={scaleSvg(5)} x2={scaleSvg(5)}
+                             y1={scaleSvg(20.08)}
+                             y2={scaleSvg(9.92)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Outer*/}
+                <motion.line variants={animation('lines', 'positive', 1)} x1={scaleSvg(5)} x2={scaleSvg(15)}
+                             y1={scaleSvg(10)}
+                             y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Positive*/}
+                <motion.line variants={animation('lines', 'inner', 1)} x1={scaleSvg(15)} x2={scaleSvg(15)}
+                             y1={scaleSvg(10)}
+                             y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Inner*/}
+                <motion.line variants={animation('lines', 'negative', 1)} x1={scaleSvg(15)} x2={scaleSvg(5)}
+                             y1={scaleSvg(20)}
+                             y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Negative*/}
             </motion.g>
-            <motion.g id="Rectangle_2" variants={rectangles(2)}>{/*Top Left*/}
-                <motion.line variants={lines('outer', 2)} x1={scaleSvg(4.92)} x2={scaleSvg(5.08, 1)} y1={scaleSvg(10.08)} y2={scaleSvg(9.92, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 2)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(10,-1)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('negative', 2)} x2={scaleSvg(5)} x1={scaleSvg(5, 1)} y2={scaleSvg(10)} y1={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
-                <motion.line variants={lines('inner', 2)} x2={scaleSvg(5, 1)} x1={scaleSvg(5, 2)} y2={scaleSvg(10,1)} y1={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
+            <motion.g id="Rectangle_2" variants={animation('rectangles', 2)}>{/*Top Left*/}
+                <motion.line variants={animation('lines', 'outer', 2)} x1={scaleSvg(4.92)} x2={scaleSvg(5.08, 1)}
+                             y1={scaleSvg(10.08)} y2={scaleSvg(9.92, -1)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Outer*/}
+                <motion.line variants={animation('lines', 'positive', 2)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)}
+                             y1={scaleSvg(10, -1)} y2={scaleSvg(10)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Positive*/}
+                <motion.line variants={animation('lines', 'negative', 2)} x2={scaleSvg(5)} x1={scaleSvg(5, 1)}
+                             y2={scaleSvg(10)}
+                             y1={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Negative*/}
+                <motion.line variants={animation('lines', 'inner', 2)} x2={scaleSvg(5, 1)} x1={scaleSvg(5, 2)}
+                             y2={scaleSvg(10, 1)}
+                             y1={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Inner*/}
             </motion.g>
-            <motion.g id="Rectangle_3" variants={rectangles(3)}>{/*Top Middle*/}
-                <motion.line variants={lines('outer', 3)} x1={scaleSvg(4.92, 1)} x2={scaleSvg(15.08, 1)} y1={scaleSvg(10, -1)} y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 3)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 1)} y1={scaleSvg(10, -1)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 3)} x1={scaleSvg(15, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(20, -1)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 3)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(20, -1)} y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
+            <motion.g id="Rectangle_3" variants={animation('rectangles', 3)}>{/*Top Middle*/}
+                <motion.line variants={animation('lines', 'outer', 3)} x1={scaleSvg(4.92, 1)} x2={scaleSvg(15.08, 1)}
+                             y1={scaleSvg(10, -1)} y2={scaleSvg(10, -1)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Outer*/}
+                <motion.line variants={animation('lines', 'positive', 3)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 1)}
+                             y1={scaleSvg(10, -1)} y2={scaleSvg(20, -1)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Positive*/}
+                <motion.line variants={animation('lines', 'inner', 3)} x1={scaleSvg(15, 1)} x2={scaleSvg(5, 1)}
+                             y1={scaleSvg(20, -1)}
+                             y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Inner*/}
+                <motion.line variants={animation('lines', 'negative', 3)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 1)}
+                             y1={scaleSvg(20, -1)} y2={scaleSvg(10, -1)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Negative*/}
             </motion.g>
-            <motion.g id="Rectangle_4" variants={rectangles(4)}>{/*Top Right*/}
-                <motion.line variants={lines('outer', 4)} x1={scaleSvg(14.92, 1)} x2={scaleSvg(15.08, 2)} y1={scaleSvg(9.92,-1)} y2={scaleSvg(10.08)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 4)} x1={scaleSvg(15, 2)} x2={scaleSvg(15, 1)} y1={scaleSvg(10)} y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 4)} x1={scaleSvg(15, 1)} x2={scaleSvg(15)} y1={scaleSvg(10, 1)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 4)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(10)} y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
+            <motion.g id="Rectangle_4" variants={animation('rectangles', 4)}>{/*Top Right*/}
+                <motion.line variants={animation('lines', 'outer', 4)} x1={scaleSvg(14.92, 1)} x2={scaleSvg(15.08, 2)}
+                             y1={scaleSvg(9.92, -1)} y2={scaleSvg(10.08)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Outer*/}
+                <motion.line variants={animation('lines', 'positive', 4)} x1={scaleSvg(15, 2)} x2={scaleSvg(15, 1)}
+                             y1={scaleSvg(10)}
+                             y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Positive*/}
+                <motion.line variants={animation('lines', 'inner', 4)} x1={scaleSvg(15, 1)} x2={scaleSvg(15)}
+                             y1={scaleSvg(10, 1)}
+                             y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Inner*/}
+                <motion.line variants={animation('lines', 'negative', 4)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)}
+                             y1={scaleSvg(10)}
+                             y2={scaleSvg(10, -1)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Negative*/}
             </motion.g>
-            <motion.g id="Rectangle_5" variants={rectangles(5)}>{/*Middle Right*/}
-                <motion.line variants={lines('outer', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(15, 2)} y1={scaleSvg(20.08)} y2={scaleSvg(9.92)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(5, 2)} y1={scaleSvg(20)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 5)} x1={scaleSvg(5, 2)} x2={scaleSvg(5, 2)} y1={scaleSvg(20)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 5)} x1={scaleSvg(5, 2)} x2={scaleSvg(15, 2)} y1={scaleSvg(10)} y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
+            <motion.g id="Rectangle_5" variants={animation('rectangles', 5)}>{/*Middle Right*/}
+                <motion.line variants={animation('lines', 'outer', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(15, 2)}
+                             y1={scaleSvg(20.08)}
+                             y2={scaleSvg(9.92)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Outer*/}
+                <motion.line variants={animation('lines', 'positive', 5)} x1={scaleSvg(15, 2)} x2={scaleSvg(5, 2)}
+                             y1={scaleSvg(20)}
+                             y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Positive*/}
+                <motion.line variants={animation('lines', 'inner', 5)} x1={scaleSvg(5, 2)} x2={scaleSvg(5, 2)}
+                             y1={scaleSvg(20)}
+                             y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Inner*/}
+                <motion.line variants={animation('lines', 'negative', 5)} x1={scaleSvg(5, 2)} x2={scaleSvg(15, 2)}
+                             y1={scaleSvg(10)}
+                             y2={scaleSvg(10)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Negative*/}
             </motion.g>
-            <motion.g id="Rectangle_6" variants={rectangles(6)}>{/*Bottom Right*/}
-                <motion.line variants={lines('outer', 6)} x2={scaleSvg(14.92, 1)} x1={scaleSvg(15.08, 2)} y2={scaleSvg(20.08,1)} y1={scaleSvg(19.92)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 6)} x1={scaleSvg(15, 1)} x2={scaleSvg(15)} y1={scaleSvg(20, 1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 6)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)} y1={scaleSvg(20)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 6)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 2)} y1={scaleSvg(20,-1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
+            <motion.g id="Rectangle_6" variants={animation('rectangles', 6)}>{/*Bottom Right*/}
+                <motion.line variants={animation('lines', 'outer', 6)} x2={scaleSvg(14.92, 1)} x1={scaleSvg(15.08, 2)}
+                             y2={scaleSvg(20.08, 1)} y1={scaleSvg(19.92)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Outer*/}
+                <motion.line variants={animation('lines', 'positive', 6)} x1={scaleSvg(15, 1)} x2={scaleSvg(15)}
+                             y1={scaleSvg(20, 1)}
+                             y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Positive*/}
+                <motion.line variants={animation('lines', 'inner', 6)} x1={scaleSvg(15)} x2={scaleSvg(15, 1)}
+                             y1={scaleSvg(20)}
+                             y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Inner*/}
+                <motion.line variants={animation('lines', 'negative', 6)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 2)}
+                             y1={scaleSvg(20, -1)} y2={scaleSvg(20)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Negative*/}
             </motion.g>
-            <motion.g id="Rectangle_7" variants={rectangles(7)}>{/*Bottom Middle*/}
-                <motion.line variants={lines('outer', 7)} x1={scaleSvg(15.08, 1)} x2={scaleSvg(4.92, 1)} y1={scaleSvg(20, 1)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 7)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 1)} y1={scaleSvg(20, 1)} y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 7)} x1={scaleSvg(5, 1)} x2={scaleSvg(15, 1)} y1={scaleSvg(10, 1)} y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 7)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 1)} y1={scaleSvg(10, 1)} y2={scaleSvg(20, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
+            <motion.g id="Rectangle_7" variants={animation('rectangles', 7)}>{/*Bottom Middle*/}
+                <motion.line variants={animation('lines', 'outer', 7)} x1={scaleSvg(15.08, 1)} x2={scaleSvg(4.92, 1)}
+                             y1={scaleSvg(20, 1)} y2={scaleSvg(20, 1)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Outer*/}
+                <motion.line variants={animation('lines', 'positive', 7)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 1)}
+                             y1={scaleSvg(20, 1)} y2={scaleSvg(10, 1)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Positive*/}
+                <motion.line variants={animation('lines', 'inner', 7)} x1={scaleSvg(5, 1)} x2={scaleSvg(15, 1)}
+                             y1={scaleSvg(10, 1)}
+                             y2={scaleSvg(10, 1)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Inner*/}
+                <motion.line variants={animation('lines', 'negative', 7)} x1={scaleSvg(15, 1)} x2={scaleSvg(15, 1)}
+                             y1={scaleSvg(10, 1)} y2={scaleSvg(20, 1)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Negative*/}
             </motion.g>
-            <motion.g id="Rectangle_8" variants={rectangles(8)}>{/*Bottom Left*/}
-                <motion.line variants={lines('outer', 8)} x2={scaleSvg(4.92)} x1={scaleSvg(5.08, 1)} y2={scaleSvg(19.92)} y1={scaleSvg(20.08, 1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Outer*/}
-                <motion.line variants={lines('positive', 8)} x1={scaleSvg(5)} x2={scaleSvg(5, 1)} y1={scaleSvg(20)} y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Positive*/}
-                <motion.line variants={lines('inner', 8)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)} y1={scaleSvg(20,-1)} y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Inner*/}
-                <motion.line variants={lines('negative', 8)} x2={scaleSvg(5, 1)} x1={scaleSvg(5, 2)} y2={scaleSvg(20,1)} y1={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8)+'px'}/>{/*Negative*/}
+            <motion.g id="Rectangle_8" variants={animation('rectangles', 8)}>{/*Bottom Left*/}
+                <motion.line variants={animation('lines', 'outer', 8)} x2={scaleSvg(4.92)} x1={scaleSvg(5.08, 1)}
+                             y2={scaleSvg(19.92)} y1={scaleSvg(20.08, 1)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Outer*/}
+                <motion.line variants={animation('lines', 'positive', 8)} x1={scaleSvg(5)} x2={scaleSvg(5, 1)}
+                             y1={scaleSvg(20)}
+                             y2={scaleSvg(20, -1)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Positive*/}
+                <motion.line variants={animation('lines', 'inner', 8)} x1={scaleSvg(5, 1)} x2={scaleSvg(5, 2)}
+                             y1={scaleSvg(20, -1)}
+                             y2={scaleSvg(20)} stroke="#252422" strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Inner*/}
+                <motion.line variants={animation('lines', 'negative', 8)} x2={scaleSvg(5, 1)} x1={scaleSvg(5, 2)}
+                             y2={scaleSvg(20, 1)} y1={scaleSvg(20)} stroke="#252422"
+                             strokeWidth={scaleSvg(.8) + 'px'}/>
+                {/*Negative*/}
             </motion.g>
         </motion.g>
-        <g id="Logo_Words" transform={"translate("+scaleSvg(30)+")"}>
-            <text id="John" className="text" transform={"translate("+scaleSvg(15.6)+" "+scaleSvg(11)+")"} fill="#252422">
+        <g id="Logo_Words" transform={"translate(" + scaleSvg(30) + ")"}>
+            <text id="John" className="text" transform={"translate(" + scaleSvg(15.6) + " " + scaleSvg(11) + ")"}
+                  fill="#252422">
                 <tspan x="0" y="19.0">John</tspan>
             </text>
-            <text id="the_Dev" className="text" transform={"translate("+scaleSvg(21.6)+" "+scaleSvg(27.072)+")"} fill="#252422">
+            <text id="the_Dev" className="text"
+                  transform={"translate(" + scaleSvg(21.6) + " " + scaleSvg(27.072) + ")"}
+                  fill="#252422">
                 <tspan x="0" y="-.5">the Dev</tspan>
             </text>
         </g>
@@ -176,7 +303,7 @@ export const Header = () => {
         default:
             break;
     }
-    !viewed&&sessionStorage.setItem('viewed', 'true');
+    !viewed && sessionStorage.setItem('viewed', 'true');
 
     return (
         <Navbar bg="light" expand="lg" className={'border-info border-bottom'}>
@@ -184,19 +311,26 @@ export const Header = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link disabled={PageActive['Home']} active={PageActive['Home']} href="/"><p>Home</p></Nav.Link>
-                    <Nav.Link disabled={PageActive['Hire Me']} active={PageActive['Hire Me']} href='/HireMe'><p>Hire
+                    <Nav.Link disabled={PageActive['Home']} active={PageActive['Home']} onClick={() => {
+                        navigate();
+                        setTimeout(() => {
+                            window.location = "/"
+                        }, 1000)
+                    }}><p>Home</p>
+                        </Nav.Link>
+                        <Nav.Link disabled={PageActive['Hire Me']} active={PageActive['Hire Me']} href='/HireMe'><p>Hire
                         Me</p></Nav.Link>
-                    <Nav.Link disabled={PageActive['Contact Me']} active={PageActive['Contact Me']} href="/ContactForm">
+                        <Nav.Link disabled={PageActive['Contact Me']} active={PageActive['Contact Me']}
+                        href="/ContactForm">
                         <p>Contact Me</p></Nav.Link>
-                    <Nav.Link disabled={PageActive['Blog']} active={PageActive['Blog']} href="/Blog"><p>Blog</p>
-                    </Nav.Link>
-                </Nav>
-                <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
-                    <Button variant="outline-primary">Search</Button>
-                </Form>
-            </Navbar.Collapse>
-        </Navbar>
-    )
-}
+                        <Nav.Link disabled={PageActive['Blog']} active={PageActive['Blog']} href="/Blog"><p>Blog</p>
+                        </Nav.Link>
+                        </Nav>
+                        <Form inline>
+                        <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
+                        <Button variant="outline-primary">Search</Button>
+                        </Form>
+                        </Navbar.Collapse>
+                        </Navbar>
+                        )
+                    }
