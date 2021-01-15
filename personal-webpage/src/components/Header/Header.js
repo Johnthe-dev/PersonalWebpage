@@ -6,6 +6,12 @@ export const Header = () => {
     const scaleFactor = 3;
     const viewed = sessionStorage.getItem('viewed');
     const [logoAnimate, setLogoAnimate] = useState({});
+    const PageActive = useState({
+        'Home': false,
+        'Hire Me': false,
+        'Contact Me': false,
+        'Blog': false
+    });
     let logoIconRoll = {
         hidden: {
             rotate: !viewed ? 0 : -180
@@ -81,8 +87,22 @@ export const Header = () => {
             }
         };
     };
+    switch ('/' + window.location.pathname.split('/')[1]) {
+        case "/":
+            PageActive['Home'] = true;
+            break;
+        case "/ContactForm":
+            PageActive['Contact Me'] = true;
+            break;
+        case '/HireMe':
+            PageActive['Hire Me'] = true;
+            break;
+        default:
+            break;
+    }
     const animation = (location, line, square) => {
         console.log(viewed);
+        let currentPage = window.location.pathname.split('/')[1]
         if (!viewed) {
             if (location === 'logo') {
                 return logoIconRoll;
@@ -94,17 +114,23 @@ export const Header = () => {
             }
         } else {
             if (location === 'lines') {
-                return lines(line, square);
-                // return {
-                //     hidden: {},
-                //     visible: {}
-                // };
+                if (currentPage === 'HireMe') {
+                    return lines(line, square);
+                } else
+                    return {
+                        hidden: {},
+                        visible: {}
+                    };
             } else if (location === 'rectangles') {
-                // return rectangles(line);
-                return {
-                    hidden: {},
-                    visible: {}
-                };
+                if (currentPage === 'HireMe') {
+
+                    return {
+                        hidden: {},
+                        visible: {}
+                    };
+                } else {
+                    return rectangles(line);
+                }
             } else if (location === 'logo') {
                 return {
                     hidden: {},
@@ -113,20 +139,39 @@ export const Header = () => {
             }
         }
     }
-    const navigate = () => {
-        setLogoAnimate({
-            x: 1000, rotate: 720, transition: {
-                duration: 2,
-                ease: 'easeInOut'
-            }
-        });
+    const navigate = (destination) => {
+        if(destination==='Home') {
+            setLogoAnimate({
+                x: 400, rotate: 720, transition: {
+                    duration: .5,
+                    ease: 'easeInOut'
+                }
+            });
+        } else if(destination==='Hire Me'){
+            setLogoAnimate({
+                y: 100, transition: {
+                    duration: .5,
+                    ease: 'easeInOut'
+                }
+            })
+        } else if(destination==='Contact Me'){
+            setLogoAnimate({
+                scale: 0,
+                transition: {
+                    duration: .5,
+                    ease: 'easeInOut'
+                }
+            })
+        } else if(destination==='Blog'){
+            setLogoAnimate({
+                scale: 50,
+                transition: {
+                    duration: .5
+                }
+            })
+        }
     }
-    const PageActive = useState({
-        'Home': false,
-        'Hire Me': false,
-        'Contact Me': false,
-        'Blog': false
-    });
+
     const scaleSvg = (number, row = 0) => {
         return (number + 10 * row / Math.sqrt(2)) * scaleFactor;
     }
@@ -290,19 +335,7 @@ export const Header = () => {
             </text>
         </g>
     </motion.svg>
-    switch ('/' + window.location.pathname.split('/')[1]) {
-        case "/":
-            PageActive['Home'] = true;
-            break;
-        case "/ContactForm":
-            PageActive['Contact Me'] = true;
-            break;
-        case '/HireMe':
-            PageActive['Hire Me'] = true;
-            break;
-        default:
-            break;
-    }
+
     !viewed && sessionStorage.setItem('viewed', 'true');
 
     return (
@@ -312,25 +345,36 @@ export const Header = () => {
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                     <Nav.Link disabled={PageActive['Home']} active={PageActive['Home']} onClick={() => {
-                        navigate();
+                        navigate('Home');
                         setTimeout(() => {
                             window.location = "/"
-                        }, 1000)
+                        }, 500)
                     }}><p>Home</p>
-                        </Nav.Link>
-                        <Nav.Link disabled={PageActive['Hire Me']} active={PageActive['Hire Me']} href='/HireMe'><p>Hire
+                    </Nav.Link>
+                    <Nav.Link disabled={PageActive['Hire Me']} active={PageActive['Hire Me']} onClick={() => {
+                        navigate('Hire Me');
+                        setTimeout(() => {
+                            window.location = "/HireMe"
+                        }, 500)}}><p>Hire
                         Me</p></Nav.Link>
-                        <Nav.Link disabled={PageActive['Contact Me']} active={PageActive['Contact Me']}
-                        href="/ContactForm">
+                    <Nav.Link disabled={PageActive['Contact Me']} active={PageActive['Contact Me']} onClick={() => {
+                                  navigate("Contact Me");
+                                  setTimeout(() => {
+                                      window.location = "/ContactForm"
+                                  }, 500)}}>
                         <p>Contact Me</p></Nav.Link>
-                        <Nav.Link disabled={PageActive['Blog']} active={PageActive['Blog']} href="/Blog"><p>Blog</p>
-                        </Nav.Link>
-                        </Nav>
-                        <Form inline>
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
-                        <Button variant="outline-primary">Search</Button>
-                        </Form>
-                        </Navbar.Collapse>
-                        </Navbar>
-                        )
-                    }
+                    <Nav.Link disabled={PageActive['Blog']} active={PageActive['Blog']} onClick={() => {
+                        navigate('Blog');
+                        setTimeout(() => {
+                            window.location = "/Blog"
+                        }, 500)}}><p>Blog</p>
+                    </Nav.Link>
+                </Nav>
+                <Form inline>
+                    <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
+                    <Button variant="outline-primary">Search</Button>
+                </Form>
+            </Navbar.Collapse>
+        </Navbar>
+    )
+}
