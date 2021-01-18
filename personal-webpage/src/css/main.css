@@ -204,3 +204,6 @@ h3 {
     stroke-linejoin: round;
     stroke-width: 1px;
 }
+.headerBorder{
+    border-bottom: solid 5px #d67600;
+}

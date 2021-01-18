@@ -339,7 +339,7 @@ export const Header = () => {
     !viewed && sessionStorage.setItem('viewed', 'true');
 
     return (
-        <Navbar bg="light" expand="lg" className={'border-info border-bottom'}>
+        <Navbar bg="light" expand="lg" className={'headerBorder'}>
             <Navbar.Brand href="#home">{logo}</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
