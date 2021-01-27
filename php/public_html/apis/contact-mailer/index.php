@@ -143,7 +143,7 @@ try {
         $swiftMailer->send($swiftMessage);
 
         //update reply
-        $reply->message = "County attributes updated";
+        $reply->message = "Email sent to John.";
     }
 
 } catch (Exception $exception) {
