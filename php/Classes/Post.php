@@ -21,6 +21,7 @@ class Post implements \JsonSerializable
 
     /**
      * id for post; Primary key - Not null, <=250
+     * eg. htne-etun-4uto-2eou
      * @var string $postId
      */
     private string $postId;
@@ -387,14 +388,17 @@ class Post implements \JsonSerializable
         }
         //create query template
         if($postOriginatedPost !== null){
-            $query = "SELECT postId, postDate, postTitle FROM post WHERE postId LIKE :postOriginatedPost AND postId <> :postOriginatedPost";
+            $query = "SELECT postId, postDate, postTitle FROM post WHERE postId LIKE :postOriginatedPost AND postId <> :postOriginatedPost AND (CHAR_LENGTH(:postOriginatedPost)+5) = CHAR_LENGTH(postId)";
+            //set parameters to execute
+            $parameters = [];
         } else{
             $query = "SELECT postId, postDate, postTitle FROM post WHERE postId NOT LIKE '%-%'";
+            //set parameters to execute
+            $parameters = ["postOriginatedPost" => $postOriginatedPost];
         }
         $statement = $pdo->prepare($query);
 
-        //set parameters to execute
-        $parameters = ["postOriginatedPost" => $postOriginatedPost];
+
         $statement->execute($parameters);
 
         //grab post from MySQL
@@ -435,7 +439,7 @@ class Post implements \JsonSerializable
         $statement->setFetchMode(\PDO::FETCH_ASSOC);
         while (($row = $statement->fetch()) !== false) {
             try {
-                $post = new Post($row["postId"], $row["postContent"], $row["postDate"], $row["postTitle"]);
+                $post = new Post($row["postId"], '', $row["postDate"], $row["postTitle"]);
                 $posts[$posts->key()] = $post;
                 $posts->next();
             } catch (\Exception $exception) {
