@@ -10,7 +10,7 @@ require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 use JOHNTHEDEV\PersonalWebsite\{Post};
 
 /**
- * API Resource for my personal website project.
+ * API Post for my personal website project.
  * @package JOHNTHEDEV\PersonalWebsite\Post
  *
  * Description: This API will be used to access the methods of the post class
@@ -38,11 +38,12 @@ try {
 
     //sanitize input
     $postId = filter_input(INPUT_GET, "postId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $postPassword = filter_input(INPUT_GET, "postPassword", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $postOrigin = filter_input(INPUT_GET, "postOrigin", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $postSearchTerms = filter_input(INPUT_GET, "postSearchTerms", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $postPassword = filter_input(INPUT_GET, "postPassword", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-    //check if resourceId is empty and method is delete or put
+    //check if postId is empty and method is delete or put
     if(($method === "DELETE" || $method === "PUT") && (empty($postId) === true)) {
         throw(new InvalidArgumentException("postId can not be empty when deleting of changing", 400));
     }
@@ -57,7 +58,7 @@ try {
         } else if(isset($postOrigin) === true) {
             //get post by originated post
             $reply->data = Post::getPostByOriginatedPost($pdo, $postOrigin)->toArray();
-        } else if(isset($resourceDistrict) === true && isset($resourceType) === true) {
+        } else if(isset($postSearchTerms) === true) {
             //get post by search terms
             $reply->data = Post::getPostByPostContentAndTitle($pdo, $postSearchTerms)->toArray();
         } else {
@@ -85,11 +86,10 @@ try {
             throw(new \InvalidArgumentException("Password is incorrect.", 401));
         }
 
-        if(isset($requestObject->postTitle) !== true) {
-            throw(new \InvalidArgumentException("There is no title.", 400));
-        }
-
         if($method === "POST") {
+            if(isset($requestObject->postTitle) !== true) {
+                throw(new \InvalidArgumentException("There is no title.", 400));
+            }
             $exists = true;
             while ($exists) {
                 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -105,8 +105,8 @@ try {
             }
             $postDate = null;
             //create new post and insert it into the database
-            $resource = new Post($postId, $requestObject->postContent, $postDate, $requestObject->postTitle);
-            $resource->insert($pdo);
+            $post = new Post($postId, $requestObject->postContent, $postDate, $requestObject->postTitle);
+            $post->insert($pdo);
             //update reply
             $reply->message = "A new Post has been created.";
 
@@ -115,132 +115,63 @@ try {
 
             //makes sure required fields are available
             if(empty($postId) === true) {
-                throw(new \InvalidArgumentException("The Resource Id field is empty.", 400));
+                throw(new \InvalidArgumentException("The Post Id field is empty.", 400));
             }
 
-            //retrieve the resource to update
-            $resource = Resource::getResourceByResourceId($pdo, $postId);
+            //retrieve the post to update
+            $post = Post::getPostByPostId($pdo, $postId);
 
             //make sure it exists
-            if($resource === null) {
-                throw (new RuntimeException("Resource to be edited does not exist", 404));
+            if($post === null) {
+                throw (new RuntimeException("Post to be edited does not exist", 404));
             }
-            if(isset($requestObject->resourceChangedDate) !== true) {
-                $resourceChangedDate = $resource->getResourceChangedDate();
+            if(isset($requestObject->postDate) !== true) {
+                $postDate = $post->getPostDate();
             } else {
-                $resourceChangedDate = $requestObject->resourceChangedDate;
+                $postDate = $requestObject->postDate;
             }
-            if(isset($requestObject->resourceChangeType) !== true) {
-                $resourceChangeType = $resource->getResourceChangeType();
+            if(isset($requestObject->postContent) !== true) {
+                $postContent = $post->getPostContent();
             } else {
-                $resourceChangeType = $requestObject->resourceChangeType;
+                $postContent = $requestObject->postContent;
             }
-            if(isset($requestObject->resourceCountyName) !== true) {
-                $resourceCountyName = $resource->getResourceCountyName();
+            if(isset($requestObject->postTitle) !== true) {
+                $postTitle = $post->getPostTitle();
             } else {
-                $resourceCountyName = $requestObject->resourceCountyName;
+                $postTitle = $requestObject->postTitle;
             }
-            if(isset($requestObject->resourceCreatedDate) !== true) {
-                $resourceCreatedDate = $resource->getResourceCreatedDate();
-            } else {
-                $resourceCreatedDate = $requestObject->resourceCreatedDate;
-            }
-            if(isset($requestObject->resourceDistrict) !== true) {
-                $resourceDistrict = $resource->getResourceDistrict();
-            } else {
-                $resourceDistrict = $requestObject->resourceDistrict;
-            }
-
-            if(isset($requestObject->resourceEmail) !== true) {
-                $resourceEmail = $resource->getResourceEmail();
-            } else {
-                $resourceEmail = $requestObject->resourceEmail;
-            }
-            if(isset($requestObject->resourceFax) !== true) {
-                $resourceFax = $resource->getResourceFax();
-            } else {
-                $resourceFax = $requestObject->resourceFax;
-            }
-            if(isset($requestObject->resourceMailingAddress) !== true) {
-                $resourceMailingAddress = $resource->getResourceMailingAddress();
-            } else {
-                $resourceMailingAddress = $requestObject->resourceMailingAddress;
-            }
-            if(isset($requestObject->resourcePriorVersion) !== true) {
-                $resourcePriorVersion = $resource->getResourcePriorVersion();
-            } else {
-                $resourcePriorVersion = $requestObject->resourcePriorVersion;
-            }
-            if(isset($requestObject->resourceStreetAddress) !== true) {
-                $resourceStreetAddress = $resource->getResourceStreetAddress();
-            } else {
-                $resourceStreetAddress = $requestObject->resourceStreetAddress;
-            }
-            if(isset($requestObject->resourceTelephone) !== true) {
-                $resourceTelephone = $resource->getResourceTelephone();
-            } else {
-                $resourceTelephone = $requestObject->resourceTelephone;
-            }
-            if(isset($requestObject->resourceTitle) !== true) {
-                $resourceTitle = $resource->getResourceTitle();
-            } else {
-                $resourceTitle = $requestObject->resourceTitle;
-            }
-            if(isset($requestObject->resourceType) !== true) {
-                $resourceType = $resource->getResourceType();
-            } else {
-                $resourceType = $requestObject->resourceType;
-            }
-            if(isset($requestObject->resourceUsersId) !== true) {
-                $resourceUsersId = $_SESSION["email"];
-            } else {
-                $resourceUsersId = $_SESSION["email"];
-            }
-            if(isset($requestObject->resourceWebsite) !== true) {
-                $resourceWebsite = $resource->getResourceWebsite();
-            } else {
-                $resourceWebsite = $requestObject->resourceWebsite;
-            }
-            $resourceChangedDate = null;
-            $resourceCreatedDate = new \DateTime();
-            $resourceChangeType = null;
-            $resourcePriorVersion = null;
-            //change resource immediately if Admin.
-            $resource->setResourceChangedDate($resourceChangedDate);
-            $resource->setResourceChangeType($resourceChangeType);
-            $resource->setResourceCountyName($resourceCountyName);
-            $resource->setResourceCreatedDate($resourceCreatedDate);
-            $resource->setResourceDistrict($resourceDistrict);
-            $resource->setResourceEmail($resourceEmail);
-            $resource->setResourceFax($resourceFax);
-            $resource->setResourceMailingAddress($resourceMailingAddress);
-            $resource->setResourcePriorVersion($resourcePriorVersion);
-            $resource->setResourceStreetAddress($resourceStreetAddress);
-            $resource->setResourceTelephone($resourceTelephone);
-            $resource->setResourceTitle($resourceTitle);
-            $resource->setResourceType($resourceType);
-            $resource->setResourceUsersId($resourceUsersId);
-            $resource->setResourceWebsite($resourceWebsite);
-            $resource->update($pdo);
+            //change post immediately if Admin.
+            $post->setPostDate($postDate);
+            $post->setPostTitle($postTitle);
+            $post->setPostContent($postContent);
+            $post->update($pdo);
             //update reply
-            $reply->message = "Resource attributes updated";
+            $reply->message = "Post updated";
         }
     } elseif($method === "DELETE") {
 
-        if(empty($_SESSION["users"]) === true || $currentUsersClearanceLevel > 5) {
-            throw(new \InvalidArgumentException("You must be logged into a victim  advocate or administrator account to delete resources", 401));
+        if(empty($postPassword) === true) {
+            throw(new \InvalidArgumentException("The Password field is empty.", 400));
         }
-        //retrieve the resource to be deleted
-        $resource = Resource::getResourceByResourceId($pdo, $postId);
+        //get password from secret creds and make sure correct password was supplied
+        $password = $secrets->getInsertPassword();
+        if(password_verify($postPassword, $password) === false) {
+            throw(new \InvalidArgumentException("Password is incorrect.", 401));
+        }
+        //retrieve the post to be deleted
+        $post = Post::getPostByPostId($pdo, $postId);
 
         //make sure it exists
-        if($resource === null) {
-            throw (new RuntimeException("Resource to be deleted does not exist", 404));
+        if($post === null) {
+            throw (new RuntimeException("Post to be deleted does not exist", 404));
         }
-        //delete resource
-        $resource->delete($pdo);
+        if(!empty(Post::getPostByOriginatedPost($pdo, $postId)->toArray())){
+            throw (new RuntimeException("Post to be deleted has children, you monster!", 404));
+        }
+        //delete post
+        $post->delete($pdo);
         //update reply
-        $reply->message = "Resource deleted";
+        $reply->message = "Post deleted";
 
     } else {
         throw (new InvalidArgumentException("Invalid HTTP method request", 405));
