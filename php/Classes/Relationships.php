@@ -146,6 +146,76 @@ class Relationships implements \JsonSerializable
         $statement->execute($parameters);
     }
 
+    /**
+     * gets the Relationship by relationshipsFirstPost and relationshipsSecondPost
+     *
+     * @param \PDO $pdo PDO connection object
+     * @param string $relationshipsFirstPost relationshipsFirstPost that will be searched for
+     * @param string $relationshipsSecondPost relationshipsSecondPost that will be searched for
+     * @return Relationships|null Relationship found or null if not found
+     */
+    public static function getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost(\PDO $pdo, string $relationshipsFirstPost, string $relationshipsSecondPost) : ?Relationships {
+        //validate relationshipsFirstPost
+        $relationshipsFirstPost = filter_var($relationshipsFirstPost, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+        //validate relationshipsSecondPost
+        $relationshipsSecondPost = filter_var($relationshipsSecondPost, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+        //create query template
+        $query = "SELECT relationshipsFirstPost, relationshipsSecondPost from relationships WHERE relationshipsFirstPost = :relationshipsFirstPost AND relationshipsSecondPost = :relationshipsSecondPost";
+        $statement = $pdo->prepare($query);
+
+        //bind the usefulResourceId and the usefulUserId to the place holder in the template
+        $parameters = ["relationshipsFirstPost"=> $relationshipsFirstPost, "relationshipsSecondPost"=>$relationshipsSecondPost];
+        $statement->execute($parameters);
+
+        //retrieve the Relationship from MySQL
+        try {
+            $relationships = null;
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            $row = $statement->fetch();
+            if ($row !== false) {
+                $relationships = new Relationships($row["relationshipsFirstPost"], $row["relationshipsSecondPost"]);
+            }
+        } catch(\Exception $exception) {
+            //if row could not be converted then rethrow
+            throw(new \PDOException($exception->getMessage(), 0, $exception));
+        }
+        return ($relationships);
+    }
+
+    /**
+     * Gets Relationship By RelationshipsId, helpful for populating a list of posts a post is related to.
+     * @param \PDO $pdo
+     * @param string $relationshipsId
+     * @return \SplFixedArray
+     */
+
+    public static function getRelationshipByRelationshipsId(\PDO $pdo, string $relationshipsId) : \SplFixedArray {
+        //validate relationshipsFirstPost
+        $relationshipsId = filter_var($relationshipsId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+        //create query template
+        $query = "SELECT relationshipsFirstPost, relationshipsSecondPost from relationships WHERE relationshipsFirstPost = :relationshipsId OR relationshipsSecondPost = :relationshipsId";
+        $statement = $pdo->prepare($query);
+        //bind the relationshipsId to the placeholder in MySQL
+        $parameters = ["relationshipsId" => $relationshipsId];
+        $statement->execute($parameters);
+        //builds an array of relationships
+        $relationships = new \SplFixedArray($statement->rowCount());
+        $statement->setFetchMode(\PDO::FETCH_ASSOC);
+        while(($row = $statement->fetch()) !== false) {
+            try {
+                $relationship = new Relationships($row["relationshipsFirstPost"], $row["relationshipsSecondPost"]);
+                $relationships[$relationships->key()] = $relationship;
+                $relationships->next();
+            } catch(\Exception $exception) {
+                throw(new \PDOException($exception->getMessage(), 0, $exception));
+            }
+        }
+        return ($relationships);
+    }
+
     #[Pure] public function jsonSerialize(): array
     {
         $fields = get_object_vars($this);
