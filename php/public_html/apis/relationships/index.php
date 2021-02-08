@@ -45,7 +45,7 @@ try {
 
         //get a count of usefuls on resource by secondPost
         if ($secondPost !== null) {
-            $useful = Relationships::getRelationshipsBySecondPost($pdo, $secondPost)->toArray();
+            $useful = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
 
             //return count
             if($useful !== null) {
@@ -62,52 +62,42 @@ try {
         $requestContent = file_get_contents("php://input");
         $requestObject = json_decode($requestContent);
 
+        //get password from secret creds and make sure correct password was supplied
+        $password = $secrets->getInsertPassword();
+        if(password_verify($requestObject->postPassword, $password) === false) {
+            throw(new \InvalidArgumentException("Password is incorrect.", 401));
+        }
+
         if(empty($requestObject->firstPost) === true) {
-            throw (new \InvalidArgumentException("No User for this Relationships", 405));
+            throw (new \InvalidArgumentException("No first post for this Relationship", 405));
         }
 
         if(empty($requestObject->secondPost) === true) {
-            throw (new \InvalidArgumentException("No Resource for this Relationships", 405));
+            throw (new \InvalidArgumentException("No second post for this Relationship", 405));
         }
 
         if($method === "POST") {
             //enforce that the end user has a XSRF token.
             verifyXsrf();
 
-            // enforce the user is signed in
-            if(empty($_SESSION["user"]) === true) {
-                throw(new \InvalidArgumentException("you must be logged in to useful resources", 403));
-            }
-
-            validateJwtHeader();
-
-            $useful = new Relationships($requestObject->secondPost, $_SESSION["user"]->getUserId());
+            $useful = new Relationships($requestObject->firstPost, $requestObject->secondPost);
             $useful->insert($pdo);
-            $reply->message = "Resource has been Relationships'd";
+            $reply->message = "Relationship created";
         } elseif($method === "PUT") {
             //enforce the end user has a XSRF token.
             verifyXsrf();
 
-            //enforce the end user has a JWT token
-            validateJwtHeader();
-
-
-            //get useful to delete by composite id
-            $useful = Relationships::($pdo, $requestObject->secondPost, $requestObject->firstPost);
-            if($useful === null) {
-                throw (new RuntimeException("Relationships Does Not Exist", 404));
+            //get relationship to delete by composite id
+            $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $requestObject->secondPost, $requestObject->firstPost);
+            if($relationship === null) {
+                throw (new RuntimeException("Relationship Does Not Exist", 404));
             }
 
-            //USER NEEDS TO BE SIGNED IN
-            if(empty($_SESSION["user"]) === true || $_SESSION["user"]->getUserId()->toString() !== $requestObject->firstPost) {
-                throw(new \InvalidArgumentException("You must be signed in to delete your useful", 401));
-            }
-
-            //delete useful
-            $useful->delete($pdo);
+            //delete relationship
+            $relationship->delete($pdo);
 
             //update message
-            $reply->message = "Relationships has been deleted.";
+            $reply->message = "Relationship has been deleted.";
         }
         // if any other HTTP request is sent throw an exception
     } else {
@@ -124,4 +114,3 @@ if($reply->data === null) {
 }
 // encode and return reply to front end caller
 echo json_encode($reply);
-© 2021 GitHub, Inc.
