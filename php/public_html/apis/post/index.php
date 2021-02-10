@@ -7,7 +7,7 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
-use JOHNTHEDEV\PersonalWebsite\{Post};
+use JOHNTHEDEV\PersonalWebsite\{Post, Relationships};
 
 /**
  * API Post for my personal website project.
@@ -167,6 +167,12 @@ try {
         }
         if(!empty(Post::getPostByOriginatedPost($pdo, $postId)->toArray())){
             throw (new RuntimeException("Post to be deleted has children, you monster!", 404));
+        }
+
+        //check if post has relationships
+        $relationships = Relationships::getRelationshipByRelationshipsId($pdo, $postId)->toArray();
+        if(count($relationships)===0){
+
         }
         //delete post
         $post->delete($pdo);
