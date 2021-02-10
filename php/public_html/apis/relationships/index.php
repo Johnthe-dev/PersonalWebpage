@@ -44,7 +44,7 @@ try {
         setXsrfCookie();
 
         //get a count of usefuls on resource by secondPost
-        if ($secondPost !== null) {
+        if ($secondPost !== null ) {
             $useful = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
 
             //return count
@@ -74,6 +74,14 @@ try {
 
         if(empty($requestObject->secondPost) === true) {
             throw (new \InvalidArgumentException("No second post for this Relationship", 405));
+        }
+
+        if(Post::getPostByPostId($pdo, $firstPost) === null) {
+            throw (new \InvalidArgumentException("The first post for this Relationship doesn't exist", 405));
+        }
+
+        if(Post::getPostByPostId($pdo, $secondPost) === null) {
+            throw (new \InvalidArgumentException("The second post for this Relationship doesn't exist", 405));
         }
 
         if($method === "POST") {
