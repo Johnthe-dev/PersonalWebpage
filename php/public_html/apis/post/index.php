@@ -171,9 +171,9 @@ try {
 
         //check if post has relationships
         $relationships = Relationships::getRelationshipByRelationshipsId($pdo, $postId)->toArray();
-        if(count($relationships)===0){
-
-        }
+            foreach ($relationships as $relationship){
+                $relationship->delete($pdo);
+            }
         //delete post
         $post->delete($pdo);
         //update reply
