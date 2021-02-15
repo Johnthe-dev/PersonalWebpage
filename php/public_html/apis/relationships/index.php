@@ -38,26 +38,21 @@ try {
 //sanitize search parameters
     $firstPost = filter_input(INPUT_GET, "firstPost", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $secondPost = filter_input(INPUT_GET, "secondPost", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $relationshipsId = filter_input(INPUT_GET, "relationshipsId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
     if($method === "GET") {
         //set XSRF cookie
         setXsrfCookie();
 
-        //get a count of usefuls on resource by secondPost
-        if ($secondPost !== null ) {
-            $useful = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
-
-            //return count
-            if($useful !== null) {
-                $reply->data = $useful;
-            }
-
-            //if search parameters aren't met scream at user
-        } elseif(empty($secondPost) !== true) {
+        //get relationships
+        if (empty($secondPost) !== true && empty($firstPost) !== true) {
+            $reply->data = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
+        } elseif(empty($relationshipsId) !== true) {
+            $reply->data = Relationships::getRelationshipByRelationshipsId($pdo, $relationshipsId)->toArray();
+        } else {
             throw (new InvalidArgumentException("incorrect search parameters", 404));
         }
     } elseif ($method === "POST" || $method === "PUT") {
-
         //decode the response from the front end
         $requestContent = file_get_contents("php://input");
         $requestObject = json_decode($requestContent);
@@ -76,11 +71,11 @@ try {
             throw (new \InvalidArgumentException("No second post for this Relationship", 405));
         }
 
-        if(Post::getPostByPostId($pdo, $firstPost) === null) {
+        if(Post::getPostByPostId($pdo, $requestObject->firstPost) === null) {
             throw (new \InvalidArgumentException("The first post for this Relationship doesn't exist", 405));
         }
 
-        if(Post::getPostByPostId($pdo, $secondPost) === null) {
+        if(Post::getPostByPostId($pdo, $requestObject->secondPost) === null) {
             throw (new \InvalidArgumentException("The second post for this Relationship doesn't exist", 405));
         }
 
@@ -96,7 +91,7 @@ try {
             verifyXsrf();
 
             //get relationship to delete by composite id
-            $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $requestObject->secondPost, $requestObject->firstPost);
+            $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $requestObject->firstPost, $requestObject->secondPost);
             if($relationship === null) {
                 throw (new RuntimeException("Relationship Does Not Exist", 404));
             }
@@ -109,7 +104,7 @@ try {
         }
         // if any other HTTP request is sent throw an exception
     } else {
-        throw new \InvalidArgumentException("invalid http request", 405);
+        throw new \InvalidArgumentException("Invalid http request", 405);
     }
     //catch any exceptions that is thrown and update the reply status and message
 } catch(\Exception | \TypeError $exception) {
