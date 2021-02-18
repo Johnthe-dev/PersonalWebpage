@@ -30,7 +30,7 @@ $reply->data = null;
 
 try {
     //grab the mySQL connection
-    $secrets = new \Secrets("var/www/apache/secret/personalWebsite.ini");
+    $secrets = new \Secrets("var/www/apache/secret/johnTheDev.ini");
     $pdo = $secrets->getPdoObject();
 
     //determine which HTTP method was used
