@@ -106,7 +106,7 @@ class Relationships implements \JsonSerializable
             throw (new \RangeException("relationships Class Exception: newSecondPost is too long"));
         }
         //store relationshipsSecondPost
-        $this->relationshipsSecondPost = $uuid;
+        $this->relationshipsSecondPost = $newSecondPost;
     }
 
 
