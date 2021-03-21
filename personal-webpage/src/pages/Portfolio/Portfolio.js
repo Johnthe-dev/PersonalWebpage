@@ -1,5 +1,5 @@
 import React from "react";
-import {Container, Navbar, Nav, Col, Row, Form, Button, FormControl, Image} from "react-bootstrap";
+import {Container, Col, Row, Image} from "react-bootstrap";
 import NavLink from "react-bootstrap/NavLink";
 import javascriptIcon from "../../images/javascript-icon.png"
 import phpIcon from "../../images/php-logo.png"
