@@ -106,7 +106,7 @@ class Relationships implements \JsonSerializable
             throw (new \RangeException("relationships Class Exception: newSecondPost is too long"));
         }
         //store relationshipsSecondPost
-        $this->relationshipsSecondPost = $uuid;
+        $this->relationshipsSecondPost = $newSecondPost;
     }
 
 
@@ -162,7 +162,7 @@ class Relationships implements \JsonSerializable
         $relationshipsSecondPost = filter_var($relationshipsSecondPost, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         //create query template
-        $query = "SELECT relationshipsFirstPost, relationshipsSecondPost from relationships WHERE (relationshipsFirstPost = :relationshipsFirstPost OR relationshipsFirstPost = :relationshipsSecondPost) AND (relationshipsSecondPost = :relationshipsFirstPost OR relationshipsSecondPost = :relationshipsSecondPost)";
+        $query = "SELECT relationshipsFirstPost, relationshipsSecondPost from relationships WHERE (relationshipsFirstPost = :relationshipsFirstPost AND relationshipsSecondPost = :relationshipsSecondPost) OR (relationshipsSecondPost = :relationshipsFirstPost OR relationshipsFirstPost = :relationshipsSecondPost)";
         $statement = $pdo->prepare($query);
 
         //bind the usefulResourceId and the usefulUserId to the place holder in the template

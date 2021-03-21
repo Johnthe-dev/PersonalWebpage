@@ -4,7 +4,6 @@ require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once(dirname(__DIR__, 6) . "/apache/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
-require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
 use JOHNTHEDEV\PersonalWebsite\{Relationships, Post};
@@ -52,7 +51,7 @@ try {
         } else {
             throw (new InvalidArgumentException("incorrect search parameters", 404));
         }
-    } elseif ($method === "POST" || $method === "PUT") {
+    } elseif ($method === "POST" || $method === "DELETE") {
         //decode the response from the front end
         $requestContent = file_get_contents("php://input");
         $requestObject = json_decode($requestContent);
@@ -82,11 +81,15 @@ try {
         if($method === "POST") {
             //enforce that the end user has a XSRF token.
             verifyXsrf();
-
-            $useful = new Relationships($requestObject->firstPost, $requestObject->secondPost);
-            $useful->insert($pdo);
-            $reply->message = "Relationship created";
-        } elseif($method === "PUT") {
+            $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $requestObject->firstPost, $requestObject->secondPost);
+            if($relationship===null){
+                $useful = new Relationships($requestObject->firstPost, $requestObject->secondPost);
+                $useful->insert($pdo);
+                $reply->message = "Relationship created";
+            } else {
+                throw (new \InvalidArgumentException("This relationship already exists", 404));
+            }
+        } elseif($method === "DELETE") {
             //enforce the end user has a XSRF token.
             verifyXsrf();
 

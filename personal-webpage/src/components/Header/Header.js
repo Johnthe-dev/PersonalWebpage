@@ -101,7 +101,6 @@ export const Header = () => {
             break;
     }
     const animation = (location, line, square) => {
-        console.log(viewed);
         let currentPage = window.location.pathname.split('/')[1]
         if (!viewed) {
             if (location === 'logo') {

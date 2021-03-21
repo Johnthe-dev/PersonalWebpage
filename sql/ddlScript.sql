@@ -14,9 +14,9 @@ create table post (
 
 -- this table will contain related posts as a weak entity
 create table relationships (
-    firstPost varchar(250) not null,
-    secondPost varchar(250) not null,
-    foreign key (firstPost) references post(postId),
-    foreign key (secondPost) references post(postId),
-    primary key (firstPost, secondPost)
+    relationshipsFirstPost varchar(250) not null,
+    relationshipsSecondPost varchar(250) not null,
+    foreign key (relationshipsFirstPost) references post(postId),
+    foreign key (relationshipsSecondPost) references post(postId),
+    primary key (relationshipsFirstPost, relationshipsSecondPost)
 );

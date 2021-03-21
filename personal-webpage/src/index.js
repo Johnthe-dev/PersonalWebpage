@@ -7,7 +7,6 @@ import thunk from "redux-thunk";
 import {Provider} from 'react-redux';
 import './css/main.css';
 import './css/PersonalWebpage.scss';
-import icon from './images/icon.svg';
 
 import * as serviceWorker from './serviceWorker';
 import {Container} from "react-bootstrap";
@@ -17,9 +16,11 @@ import {Home} from "./pages/Home/Home";
 import {Header} from "./components/Header/Header";
 import {ContactMe} from "./pages/ContactMe/ContactMe";
 import {Portfolio} from "./pages/Portfolio/Portfolio";
+import {Blog} from "./pages/Blog/Blog";
 import {Testing} from "./pages/Testing/Testing"
+import {combinedReducers} from "./shared/reducers";
 
-const store = createStore(applyMiddleware(thunk));
+const store = createStore(combinedReducers, applyMiddleware(thunk));
 const Routing = (store) => (
     <>
         <Provider store={store}>
@@ -37,6 +38,7 @@ const Routing = (store) => (
                                 <Route exact path='/ContactForm' component={ContactMe}/>
                                 <Route exact path='/HireMe' component={Portfolio}/>
                                 <Route exact path='/Testing' component={Testing}/>
+                                <Route exact path='/Blog' component={Blog}/>
                             </Switch>
                         </Col>
                     </Row>
