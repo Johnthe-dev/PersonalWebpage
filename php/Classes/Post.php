@@ -1,10 +1,7 @@
 <?php
-
-
 namespace JOHNTHEDEV\PersonalWebsite;
-
 require_once(dirname(__DIR__) . "/Classes/autoload.php");
-require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
 
 /**
@@ -13,11 +10,9 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
  *
  * Description: This class will hold the posts for JohnThe.dev.
  *
- * @author John Johnson-Rogers <john@johnthe.dev>
+ * @author John Johnson-Rodgers <john@johnthe.dev>
  */
-class Post implements \JsonSerializable
-{
-    use ValidateDate;
+class Post implements \JsonSerializable {
 
     /**
      * id for post; Primary key - Not null, <=250
@@ -34,9 +29,9 @@ class Post implements \JsonSerializable
 
     /**
      * date Post was created - not null, \DateTime
-     * @var \DateTime $postDate
+     * @var \DateTime|string $postDate
      */
-    private \DateTime $postDate;
+    private $postDate;
 
     /**
      * Title for post - not null, <=200
@@ -57,11 +52,11 @@ class Post implements \JsonSerializable
      * Post constructor.
      * @param string $postId
      * @param string $postContent
-     * @param \DateTime | string $postDate
+     * @param \DateTime|null
      * @param string $postTitle
      * @throws \InvalidArgumentException | \RangeException | \TypeError | \Exception if setters do not work
      */
-    public function __construct(string $postId, string $postContent, \DateTime|string $postDate, string $postTitle)
+    public function __construct(string $postId, string $postContent, $postDate, string $postTitle)
     {
         try {
             $this->setPostId($postId);
@@ -146,9 +141,9 @@ class Post implements \JsonSerializable
     /**
      * Accessor Method for postDate
      *
-     * @return \DateTime
+     * @return \DateTime|string
      */
-    public function getPostDate(): \DateTime
+    public function getPostDate()
     {
         return ($this->postDate);
     }
@@ -156,23 +151,17 @@ class Post implements \JsonSerializable
     /**
      * Mutator Method for postDate
      *
-     * @param /DateTime | string $newPostDate
+     * @param string|null $newPostDate
      * @throws \Exception if $newPostDate is an invalid argument, out of range, has a type error, or has another exception.
      */
-    public function setPostDate($newPostDate = null): void
+    public function setPostDate(?string $newPostDate): void
     {
         //checks if $newPostDate is null, if so set to current DateTime
-        if ($newPostDate === null) {
-            $newPostDate = new \DateTime();
+        if($newPostDate === null){
+            $this->postDate = new \DateTime();
+        } else {
+            $this->postDate = $newPostDate;
         }
-
-        try {
-            $newPostDate = self::validateDateTime($newPostDate);
-        } catch (\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-            $exceptionType = get_class($exception);
-            throw(new $exceptionType("LoginAttempt Class Exception: setPostDate: " . $exception->getMessage(), 0, $exception));
-        }
-        $this->postDate = $newPostDate;
     }
 
     /**
@@ -203,7 +192,7 @@ class Post implements \JsonSerializable
         }
         $this->postTitle = $newPostTitle;
     }
-
+//
     /***
      *      __  __   ______   _______   _    _    ____    _____     _____
      *     |  \/  | |  ____| |__   __| | |  | |  / __ \  |  __ \   / ____|
@@ -212,7 +201,7 @@ class Post implements \JsonSerializable
      *     | |  | | | |____     | |    | |  | | | |__| | | |__| |  ____) |
      *     |_|  |_| |______|    |_|    |_|  |_|  \____/  |_____/  |_____/
      */
-
+//
     /**
      * INSERT
      * Inserts Post into MySQL
@@ -235,7 +224,7 @@ class Post implements \JsonSerializable
         ];
         $statement->execute($parameters);
     }
-
+//
     /**
      * UPDATE
      * updates Post in MySQL database
@@ -258,7 +247,7 @@ class Post implements \JsonSerializable
         ];
         $statement->execute($parameters);
     }
-
+//
     /**
      * DELETE
      * deletes Post from MySQL database
@@ -276,7 +265,7 @@ class Post implements \JsonSerializable
         $parameters = ["loginAttemptId" => $this->postId];
         $statement->execute($parameters);
     }
-
+//
     /**
      * get post by postId
      *
@@ -291,20 +280,20 @@ class Post implements \JsonSerializable
         //trim and filter out invalid input
         $postId = trim($postId);
         $postId = filter_var($postId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
+//
         //checks if string length is appropriate
         if (strlen($postId) > 250) {
             throw (new \RangeException("Post Class Exception: postId is too long"));
         }
-
+//
         //create query template
         $query = "SELECT postId, postContent, postDate, postTitle FROM post WHERE postId = :postId";
         $statement = $pdo->prepare($query);
-
+//
         //set parameters to execute
         $parameters = ["postId" => $postId];
         $statement->execute($parameters);
-
+//
         //grab post from MySQL
         try {
             $post = null;
@@ -319,44 +308,43 @@ class Post implements \JsonSerializable
         }
         return ($post);
     }
-
+//
     /**
      * get posts by post content and title
      *
      * @param \PDO $pdo
      * @param string $postSearchTerms
-     * @return \SplFixedArray
+     * @return array
      * @throws \PDOException when mysql related errors occur
      * @throws \TypeError when variable doesn't follow typehints
      */
-    public static function getPostByPostContentAndTitle(\PDO $pdo, string $postSearchTerms): \SplFixedArray
+    public static function getPostByPostContentAndTitle(\PDO $pdo, string $postSearchTerms): array
     {
         //trim and filter out invalid input
         $postSearchTerms = trim($postSearchTerms);
         $postSearchTerms = filter_var($postSearchTerms, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $postSearchTerms = '%' . $postSearchTerms . '%';
-
+//
         //checks if string length is appropriate
         if (strlen($postSearchTerms) > 250) {
             throw (new \RangeException("Post Class Exception: postSearchTerms are too long"));
         }
-
+//
         //create query template
         $query = "SELECT postId, postContent, postDate, postTitle FROM post WHERE postContent LIKE :postSearchTerms OR postTitle LIKE :postSearchTerms";
         $statement = $pdo->prepare($query);
-
+//
         //set parameters to execute
         $parameters = ["postSearchTerms" => $postSearchTerms];
         $statement->execute($parameters);
-
+//
         //grab post from MySQL
-        $posts = new \SplFixedArray($statement->rowCount());
+        $posts = array();
         $statement->setFetchMode(\PDO::FETCH_ASSOC);
         while (($row = $statement->fetch()) !== false) {
             try {
                 $post = new Post($row["postId"], $row["postContent"], $row["postDate"], $row["postTitle"]);
-                $posts[$posts->key()] = $post;
-                $posts->next();
+                $posts[] = $post;
             } catch (\Exception $exception) {
                 //if row can't be converted rethrow it
                 throw(new \PDOException($exception->getMessage(), 0, $exception));
@@ -364,17 +352,17 @@ class Post implements \JsonSerializable
         }
         return ($posts);
     }
-
+//
     /**
      * get posts by post Originated Post, THis will grab all subposts associated with a given post or main posts if null.
      *
      * @param \PDO $pdo
      * @param ?string $postOriginatedPost
-     * @return \SplFixedArray
+     * @return array
      * @throws \PDOException when mysql related errors occur
      * @throws \TypeError when variable doesn't follow typehints
      */
-    public static function getPostByOriginatedPost(\PDO $pdo, ?string $postOriginatedPost): \SplFixedArray
+    public static function getPostByOriginatedPost(\PDO $pdo, ?string $postOriginatedPost): array
     {
         //trim and filter out invalid input
         if ($postOriginatedPost !== null) {
@@ -397,18 +385,17 @@ class Post implements \JsonSerializable
             $parameters = ["postOriginatedPost" => $postOriginatedPost];
         }
         $statement = $pdo->prepare($query);
-
-
+//
+//
         $statement->execute($parameters);
-
+//
         //grab post from MySQL
-        $posts = new \SplFixedArray($statement->rowCount());
+        $posts = array();
         $statement->setFetchMode(\PDO::FETCH_ASSOC);
         while (($row = $statement->fetch()) !== false) {
             try {
                 $post = new Post($row["postId"], '', $row["postDate"], $row["postTitle"]);
-                $posts[$posts->key()] = $post;
-                $posts->next();
+                $posts[] = $post;
             } catch (\Exception $exception) {
                 //if row can't be converted rethrow it
                 throw(new \PDOException($exception->getMessage(), 0, $exception));
@@ -421,27 +408,24 @@ class Post implements \JsonSerializable
      * get all posts sort by datetime desc
      *
      * @param \PDO $pdo
-     * @return \SplFixedArray
+     * @return array
      * @throws \PDOException when mysql related errors occur
      * @throws \TypeError when variable doesn't follow typehints
      */
-    public static function getAllPosts(\PDO $pdo): \SplFixedArray
-    {
+    public static function getAllPosts(\PDO $pdo): array {
         //create query template
         $query = "SELECT postId, postContent, postDate, postTitle FROM post ORDER BY postDate DESC";
         $statement = $pdo->prepare($query);
-
         //set parameters to execute
         $statement->execute();
 
         //grab post from MySQL
-        $posts = new \SplFixedArray($statement->rowCount());
+        $posts = array();
         $statement->setFetchMode(\PDO::FETCH_ASSOC);
         while (($row = $statement->fetch()) !== false) {
             try {
-                $post = new Post($row["postId"], '', $row["postDate"], $row["postTitle"]);
-                $posts[$posts->key()] = $post;
-                $posts->next();
+                $post = new Post($row["postId"], '', null, $row["postTitle"]);
+                $posts[] = $post;
             } catch (\Exception $exception) {
                 //if row can't be converted rethrow it
                 throw(new \PDOException($exception->getMessage(), 0, $exception));

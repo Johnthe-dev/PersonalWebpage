@@ -4,7 +4,8 @@ namespace JOHNTHEDEV\PersonalWebsite;
 
 use JetBrains\PhpStorm\Pure;
 
-require_once(dirname(__DIR__) . "/vendor/autoload.php");
+require_once(dirname(__DIR__) . "/Classes/autoload.php");
+require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
 /**
  * Creating class Relationships, this will allow posts to be linked together in the knowledge system
@@ -188,10 +189,10 @@ class Relationships implements \JsonSerializable
      * Gets Relationship By RelationshipsId, helpful for populating a list of posts a post is related to.
      * @param \PDO $pdo
      * @param string $relationshipsId
-     * @return \SplFixedArray
+     * @return array
      */
 
-    public static function getRelationshipByRelationshipsId(\PDO $pdo, string $relationshipsId) : \SplFixedArray {
+    public static function getRelationshipByRelationshipsId(\PDO $pdo, string $relationshipsId) : array {
         //validate relationshipsFirstPost
         $relationshipsId = filter_var($relationshipsId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
@@ -202,13 +203,12 @@ class Relationships implements \JsonSerializable
         $parameters = ["relationshipsId" => $relationshipsId];
         $statement->execute($parameters);
         //builds an array of relationships
-        $relationships = new \SplFixedArray($statement->rowCount());
+        $relationships = array();
         $statement->setFetchMode(\PDO::FETCH_ASSOC);
         while(($row = $statement->fetch()) !== false) {
             try {
                 $relationship = new Relationships($row["relationshipsFirstPost"], $row["relationshipsSecondPost"]);
-                $relationships[$relationships->key()] = $relationship;
-                $relationships->next();
+                $relationships[] = $relationship;
             } catch(\Exception $exception) {
                 throw(new \PDOException($exception->getMessage(), 0, $exception));
             }

@@ -47,7 +47,7 @@ try {
         if (empty($secondPost) !== true && empty($firstPost) !== true) {
             $reply->data = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
         } elseif(empty($relationshipsId) !== true) {
-            $reply->data = Relationships::getRelationshipByRelationshipsId($pdo, $relationshipsId)->toArray();
+            $reply->data = Relationships::getRelationshipByRelationshipsId($pdo, $relationshipsId);
         } else {
             throw (new InvalidArgumentException("incorrect search parameters", 404));
         }
