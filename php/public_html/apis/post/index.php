@@ -4,7 +4,6 @@ require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once(dirname(__DIR__, 6) . "/apache/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
-require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
 use JOHNTHEDEV\PersonalWebsite\{Post, Relationships};
 
@@ -31,7 +30,6 @@ try {
     //grab the mySQL connection
     $secrets = new \Secrets("var/www/apache/secret/johnTheDev.ini");
     $pdo = $secrets->getPdoObject();
-
     //determine which HTTP method was used
     $method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 
@@ -46,29 +44,23 @@ try {
     if(($method === "DELETE" || $method === "PUT") && (empty($postId) === true)) {
         throw(new InvalidArgumentException("postId can not be empty when deleting of changing", 400));
     }
-
     if($method === "GET") {
         //set xsrf cookie
         setXsrfCookie();
-
         if(isset($postId) === true) {
             //get post by postId
             $reply->data = Post::getPostByPostId($pdo, $postId);
         } else if(isset($postOrigin) === true) {
             //get post by originated post
-            $reply->data = Post::getPostByOriginatedPost($pdo, $postOrigin)->toArray();
+            $reply->data = Post::getPostByOriginatedPost($pdo, $postOrigin);
         } else if(isset($postSearchTerms) === true) {
             //get post by search terms
-            $reply->data = Post::getPostByPostContentAndTitle($pdo, $postSearchTerms)->toArray();
+            $reply->data = Post::getPostByPostContentAndTitle($pdo, $postSearchTerms);
         } else {
             //get all posts
-            $reply->data = Post::getAllPosts($pdo)->toArray();
+            $reply->data = Post::getAllPosts($pdo);
         }
-
     } elseif($method === "POST" || $method === "PUT") {
-        //enforce xsrf token
-        verifyXsrf();
-
         //retrieves JSON package that was sent by the user and stores it in $requestContent using file_get_contents
         $requestContent = file_get_contents("php://input");
 
@@ -94,7 +86,7 @@ try {
                 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                 $randstring = '';
                 for ($i = 0; $i < 4; $i++) {
-                    $randstring = $characters[rand(0, strlen($characters))];
+                    $randstring .= $characters[rand(0, strlen($characters))];
                 }
                 $postId = $requestObject->postId.$randstring;
                 $post = Post::getPostByPostId($pdo, $postId);
@@ -104,7 +96,7 @@ try {
             }
             $postDate = null;
             //create new post and insert it into the database
-            $post = new Post($postId, $requestObject->postContent, $postDate, $requestObject->postTitle);
+            $post = new Post($postId, $requestObject->postContent, null, $requestObject->postTitle);
             $post->insert($pdo);
             //update reply
             $reply->message = "A new Post has been created.";
@@ -124,11 +116,6 @@ try {
             if($post === null) {
                 throw (new RuntimeException("Post to be edited does not exist", 404));
             }
-            if(isset($requestObject->postDate) !== true) {
-                $postDate = $post->getPostDate();
-            } else {
-                $postDate = $requestObject->postDate;
-            }
             if(isset($requestObject->postContent) !== true) {
                 $postContent = $post->getPostContent();
             } else {
@@ -140,7 +127,6 @@ try {
                 $postTitle = $requestObject->postTitle;
             }
             //change post immediately if Admin.
-            $post->setPostDate($postDate);
             $post->setPostTitle($postTitle);
             $post->setPostContent($postContent);
             $post->update($pdo);
@@ -164,12 +150,12 @@ try {
         if($post === null) {
             throw (new RuntimeException("Post to be deleted does not exist", 404));
         }
-        if(!empty(Post::getPostByOriginatedPost($pdo, $postId)->toArray())){
+        if(!empty(Post::getPostByOriginatedPost($pdo, $postId))){
             throw (new RuntimeException("Post to be deleted has children, you monster!", 404));
         }
 
         //check if post has relationships
-        $relationships = Relationships::getRelationshipByRelationshipsId($pdo, $postId)->toArray();
+        $relationships = Relationships::getRelationshipByRelationshipsId($pdo, $postId);
             foreach ($relationships as $relationship){
                 $relationship->delete($pdo);
             }

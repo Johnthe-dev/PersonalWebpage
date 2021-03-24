@@ -3,7 +3,7 @@ const proxy = require('http-proxy-middleware');
 module.exports = function(app) {
     app.use(proxy('/apis', {
         logLevel: 'debug',
-        target: "C:/Users/Bladv/Desktop/www/var/html/PersonalWebpage/php/public_html/apis",
+        target: "http://143.198.100.70/PersonalWebpage/php/public_html/",
         changeOrigin: true,
         secure: true,
     }));
