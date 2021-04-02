@@ -1,8 +1,5 @@
 <?php
-
 namespace JOHNTHEDEV\PersonalWebsite;
-
-use JetBrains\PhpStorm\Pure;
 
 require_once(dirname(__DIR__) . "/Classes/autoload.php");
 require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
@@ -216,7 +213,7 @@ class Relationships implements \JsonSerializable
         return ($relationships);
     }
 
-    #[Pure] public function jsonSerialize(): array
+    public function jsonSerialize(): array
     {
         $fields = get_object_vars($this);
         return ($fields);
