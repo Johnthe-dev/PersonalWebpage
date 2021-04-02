@@ -21,9 +21,11 @@ export const Blog = () => {
             </Row>
             {data.post&&
             <>
+            <Row>
                 <h3>
                     {data.post.postTitle}
                 </h3>
+            </Row>
                 <Row>
                     <ReactMarkdown>
                     {data.post.postContent}
