@@ -13,6 +13,7 @@ require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
  * @author John Johnson-Rodgers <john@johnthe.dev>
  */
 class Post implements \JsonSerializable {
+    use ValidateDate;
 
     /**
      * id for post; Primary key - Not null, <=250
@@ -160,6 +161,12 @@ class Post implements \JsonSerializable {
         if($newPostDate === null){
             $this->postDate = new \DateTime();
         } else {
+            try {
+                $newPostDate = self::validateDateTime($newPostDate);
+            } catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+                $exceptionType = get_class($exception);
+                throw(new $exceptionType("Post Class Exception: setPostDate: " . $exception->getMessage(), 0, $exception));
+            }
             $this->postDate = $newPostDate;
         }
     }
@@ -262,7 +269,7 @@ class Post implements \JsonSerializable {
         $query = "DELETE FROM post WHERE postId = :postId";
         $statement = $pdo->prepare($query);
         //set parameters to execute query
-        $parameters = ["loginAttemptId" => $this->postId];
+        $parameters = ["postId" => $this->postId];
         $statement->execute($parameters);
     }
 //
@@ -280,20 +287,20 @@ class Post implements \JsonSerializable {
         //trim and filter out invalid input
         $postId = trim($postId);
         $postId = filter_var($postId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-//
+
         //checks if string length is appropriate
         if (strlen($postId) > 250) {
             throw (new \RangeException("Post Class Exception: postId is too long"));
         }
-//
+
         //create query template
         $query = "SELECT postId, postContent, postDate, postTitle FROM post WHERE postId = :postId";
         $statement = $pdo->prepare($query);
-//
+
         //set parameters to execute
         $parameters = ["postId" => $postId];
         $statement->execute($parameters);
-//
+
         //grab post from MySQL
         try {
             $post = null;
@@ -307,8 +314,9 @@ class Post implements \JsonSerializable {
             throw(new \PDOException($exception->getMessage(), 0, $exception));
         }
         return ($post);
+
     }
-//
+
     /**
      * get posts by post content and title
      *
@@ -324,20 +332,20 @@ class Post implements \JsonSerializable {
         $postSearchTerms = trim($postSearchTerms);
         $postSearchTerms = filter_var($postSearchTerms, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $postSearchTerms = '%' . $postSearchTerms . '%';
-//
+
         //checks if string length is appropriate
         if (strlen($postSearchTerms) > 250) {
             throw (new \RangeException("Post Class Exception: postSearchTerms are too long"));
         }
-//
+
         //create query template
         $query = "SELECT postId, postContent, postDate, postTitle FROM post WHERE postContent LIKE :postSearchTerms OR postTitle LIKE :postSearchTerms";
         $statement = $pdo->prepare($query);
-//
+
         //set parameters to execute
         $parameters = ["postSearchTerms" => $postSearchTerms];
         $statement->execute($parameters);
-//
+
         //grab post from MySQL
         $posts = array();
         $statement->setFetchMode(\PDO::FETCH_ASSOC);
@@ -352,7 +360,7 @@ class Post implements \JsonSerializable {
         }
         return ($posts);
     }
-//
+
     /**
      * get posts by post Originated Post, THis will grab all subposts associated with a given post or main posts if null.
      *
@@ -374,31 +382,26 @@ class Post implements \JsonSerializable {
                 throw (new \RangeException("Post Class Exception: postSearchTerms are too long"));
             }
         }
+
+        $posts = array();
         //create query template
         if($postOriginatedPost !== null){
-            $query = "SELECT postId, postDate, postTitle FROM post WHERE postId LIKE :postOriginatedPost AND postId <> :postOriginatedPost AND (CHAR_LENGTH(:postOriginatedPost)+5) = CHAR_LENGTH(postId)";
-            //set parameters to execute
-            $parameters = [];
-        } else{
-            $query = "SELECT postId, postDate, postTitle FROM post WHERE postId NOT LIKE '%-%'";
+            $query = "SELECT postId, postDate, postTitle FROM post WHERE postId LIKE :postOriginatedPost AND postId <> :postOriginatedPost AND (CHAR_LENGTH(:postOriginatedPost)+4) = CHAR_LENGTH(postId)";
             //set parameters to execute
             $parameters = ["postOriginatedPost" => $postOriginatedPost];
-        }
-        $statement = $pdo->prepare($query);
-//
-//
-        $statement->execute($parameters);
-//
-        //grab post from MySQL
-        $posts = array();
-        $statement->setFetchMode(\PDO::FETCH_ASSOC);
-        while (($row = $statement->fetch()) !== false) {
-            try {
-                $post = new Post($row["postId"], '', $row["postDate"], $row["postTitle"]);
-                $posts[] = $post;
-            } catch (\Exception $exception) {
-                //if row can't be converted rethrow it
-                throw(new \PDOException($exception->getMessage(), 0, $exception));
+            $statement = $pdo->prepare($query);
+            $statement->execute($parameters);
+
+            //grab post from MySQL
+            $statement->setFetchMode(\PDO::FETCH_ASSOC);
+            while (($row = $statement->fetch()) !== false) {
+                try {
+                    $post = new Post($row["postId"], '', $row["postDate"], $row["postTitle"]);
+                    $posts[] = $post;
+                } catch (\Exception $exception) {
+                    //if row can't be converted rethrow it
+                    throw(new \PDOException($exception->getMessage(), 0, $exception));
+                }
             }
         }
         return ($posts);
@@ -432,6 +435,64 @@ class Post implements \JsonSerializable {
             }
         }
         return ($posts);
+    }
+
+    /**
+     * get all posts sort by datetime desc
+     *
+     * @param \PDO $pdo
+     * @param string $postId
+     * @return array
+     * @throws \PDOException when mysql related errors occur
+     * @throws \TypeError when variable doesn't follow typehints
+     */
+    public static function getParentPosts(\PDO $pdo, string $postId): array {
+
+        if(strlen($postId)%4!==0){
+            throw (new \RangeException("Post Class Exception: postId not accurate."));
+        }
+        $postId = substr($postId, 0,strlen($postId)-4);
+        $posts = array();
+        while(strlen($postId)>=4){
+            $query = "SELECT postId, postContent, postDate, postTitle FROM post WHERE postId = :postId";
+            $statement = $pdo->prepare($query);
+
+            //set parameters to execute
+            $parameters = ["postId" => $postId];
+            $statement->execute($parameters);
+
+            //grab post from MySQL
+            try {
+                $post = null;
+                $statement->setFetchMode(\PDO::FETCH_ASSOC);
+                $row = $statement->fetch();
+                if ($row !== false) {
+                    $post = new Post($row["postId"], $row["postContent"], $row["postDate"], $row["postTitle"]);
+                    $posts[]= $post;
+                }
+            } catch (\Exception $exception) {
+                //if row can't be converted rethrow it
+                throw(new \PDOException($exception->getMessage(), 0, $exception));
+            }
+            $postId = substr($postId, 0,strlen($postId)-4);
+        }
+        return ($posts);
+    }
+
+    /**
+     * get all posts sort by datetime desc
+     *
+     * @param \PDO $pdo
+     * @param string $postId
+     * @return array
+     * @throws \PDOException when mysql related errors occur
+     * @throws \TypeError when variable doesn't follow typehints
+     */
+    public static function getPostAndChildPostsAndParentPosts(\PDO $pdo, string $postId): array {
+        $post = self::getPostByPostId($pdo, $postId);
+        $children = self::getPostByOriginatedPost($pdo, $postId);
+        $parents = self::getParentPosts($pdo, $postId);
+        return array('post'=>$post, 'children'=>$children, 'parents'=>$parents);
     }
 
     /**

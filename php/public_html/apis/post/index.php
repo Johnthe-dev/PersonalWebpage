@@ -38,7 +38,6 @@ try {
     $postPassword = filter_input(INPUT_GET, "postPassword", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $postOrigin = filter_input(INPUT_GET, "postOrigin", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $postSearchTerms = filter_input(INPUT_GET, "postSearchTerms", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    $postPassword = filter_input(INPUT_GET, "postPassword", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
     //check if postId is empty and method is delete or put
     if(($method === "DELETE" || $method === "PUT") && (empty($postId) === true)) {
@@ -49,7 +48,8 @@ try {
         setXsrfCookie();
         if(isset($postId) === true) {
             //get post by postId
-            $reply->data = Post::getPostByPostId($pdo, $postId);
+            $queryData = Post::getPostAndChildPostsAndParentPosts($pdo, $postId);
+            $reply->data = (object)array('post'=>$queryData['post'], 'children'=>$queryData['children'], 'parents'=>$queryData['parents']);
         } else if(isset($postOrigin) === true) {
             //get post by originated post
             $reply->data = Post::getPostByOriginatedPost($pdo, $postOrigin);
@@ -81,19 +81,28 @@ try {
             if(isset($requestObject->postTitle) !== true) {
                 throw(new \InvalidArgumentException("There is no title.", 400));
             }
-            $exists = true;
-            while ($exists) {
-                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $randstring = '';
-                for ($i = 0; $i < 4; $i++) {
-                    $randstring .= $characters[rand(0, strlen($characters))];
-                }
-                $postId = $requestObject->postId.$randstring;
+            if(empty($requestObject->postId)){
+                $postId = 'john';
                 $post = Post::getPostByPostId($pdo, $postId);
-                if($post === null){
-                    $exists = false;
+                if($post !== null){
+                    throw(new \InvalidArgumentException("Original post already corrected", 400));
+                };
+            } else {
+                $exists = true;
+                while ($exists) {
+                    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    $randstring = '';
+                    for ($i = 0; $i < 4; $i++) {
+                        $randstring .= $characters[rand(0, strlen($characters))];
+                    }
+                    $postId = $requestObject->postId.$randstring;
+                    $post = Post::getPostByPostId($pdo, $postId);
+                    if($post === null){
+                        $exists = false;
+                    }
                 }
             }
+
             $postDate = null;
             //create new post and insert it into the database
             $post = new Post($postId, $requestObject->postContent, null, $requestObject->postTitle);
@@ -134,7 +143,6 @@ try {
             $reply->message = "Post updated";
         }
     } elseif($method === "DELETE") {
-
         if(empty($postPassword) === true) {
             throw(new \InvalidArgumentException("The Password field is empty.", 400));
         }

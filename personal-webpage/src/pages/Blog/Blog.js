@@ -1,27 +1,35 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Container, Row} from "react-bootstrap";
-import {getAllPosts} from "../../shared/actions/post";
-import {httpConfig} from "../../shared/utils/http-config";
+import {Col, Container, Row} from "react-bootstrap";
+import {getPostByPostId} from "../../shared/actions/post";
+import ReactMarkdown from 'react-markdown';
 
 export const Blog = () => {
-    let blogs =useSelector(state => (state.blog ? state.blog : []));
+    let data =useSelector(state => (state.post ? state.post : []));
     const dispatch = useDispatch();
+    const [postId, setPostId] = useState('john');
     //set effects and inputs for async calls
+    console.log(data);
     const effects = () => {
-        dispatch(getAllPosts(), []);
+        dispatch(getPostByPostId(postId), [postId]);
     };
-    httpConfig.get(`/apis/post/`)
-        .then(reply => {
-            console.log(reply);
-        })
-    console.log(blogs);
-    useEffect(effects);
+    useEffect(effects, [postId]);
     return (
         <Container>
             <Row className={"py-5 justify-content-around"}>
                 <h2>Blog</h2>
             </Row>
+            {data.post&&
+            <>
+                <h3>
+                    {data.post.postTitle}
+                </h3>
+                <Row>
+                    <ReactMarkdown>
+                    {data.post.postContent}
+                    </ReactMarkdown>
+                </Row>
+            </>}
         </Container>
     )
-};
+}
