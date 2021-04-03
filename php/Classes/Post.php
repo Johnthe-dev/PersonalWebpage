@@ -386,7 +386,7 @@ class Post implements \JsonSerializable {
         $posts = array();
         //create query template
         if($postOriginatedPost !== null){
-            $query = "SELECT postId, postDate, postTitle FROM post WHERE postId LIKE :postOriginatedPost AND postId <> :postOriginatedPost AND (CHAR_LENGTH(:postOriginatedPost)+4) = CHAR_LENGTH(postId)";
+            $query = "SELECT postId, postTitle FROM post WHERE postId LIKE :postOriginatedPost AND (CHAR_LENGTH(:postOriginatedPost)+3) = CHAR_LENGTH(postId)";
             //set parameters to execute
             $parameters = ["postOriginatedPost" => $postOriginatedPost];
             $statement = $pdo->prepare($query);
@@ -396,7 +396,7 @@ class Post implements \JsonSerializable {
             $statement->setFetchMode(\PDO::FETCH_ASSOC);
             while (($row = $statement->fetch()) !== false) {
                 try {
-                    $post = new Post($row["postId"], '', $row["postDate"], $row["postTitle"]);
+                    $post = new Post($row["postId"], '', null, $row["postTitle"]);
                     $posts[] = $post;
                 } catch (\Exception $exception) {
                     //if row can't be converted rethrow it
@@ -417,7 +417,7 @@ class Post implements \JsonSerializable {
      */
     public static function getAllPosts(\PDO $pdo): array {
         //create query template
-        $query = "SELECT postId, postContent, postDate, postTitle FROM post ORDER BY postDate DESC";
+        $query = "SELECT postId, postTitle FROM post ORDER BY postDate DESC";
         $statement = $pdo->prepare($query);
         //set parameters to execute
         $statement->execute();
@@ -488,11 +488,56 @@ class Post implements \JsonSerializable {
      * @throws \PDOException when mysql related errors occur
      * @throws \TypeError when variable doesn't follow typehints
      */
+    public static function getRelatedPosts(\PDO $pdo, string $postId): array {
+
+        if(strlen($postId)%4!==0){
+            throw (new \RangeException("Post Class Exception: postId not accurate."));
+        }
+        $postId = substr($postId, 0,strlen($postId)-4);
+        $posts = array();
+        while(strlen($postId)>=4){
+            $query = "SELECT p.postId, p.postContent, p.postDate, p.postTitle from post p left join relationships lr on 
+            lr.relationshipsFirstPost = p.postId left join relationships rr on rr.relationshipsSecondPost = p.postId
+            WHERE rr.relationshipsFirstPost = :postId OR lr.relationshipsSecondPost = :postId";
+            $statement = $pdo->prepare($query);
+
+            //set parameters to execute
+            $parameters = ["postId" => $postId];
+            $statement->execute($parameters);
+
+            //grab post from MySQL
+            try {
+                $post = null;
+                $statement->setFetchMode(\PDO::FETCH_ASSOC);
+                $row = $statement->fetch();
+                if ($row !== false) {
+                    $post = new Post($row["postId"], $row["postContent"], $row["postDate"], $row["postTitle"]);
+                    $posts[]= $post;
+                }
+            } catch (\Exception $exception) {
+                //if row can't be converted rethrow it
+                throw(new \PDOException($exception->getMessage(), 0, $exception));
+            }
+            $postId = substr($postId, 0,strlen($postId)-4);
+        }
+        return ($posts);
+    }
+
+    /**
+     * get all posts sort by datetime desc
+     *
+     * @param \PDO $pdo
+     * @param string $postId
+     * @return array
+     * @throws \PDOException when mysql related errors occur
+     * @throws \TypeError when variable doesn't follow typehints
+     */
     public static function getPostAndChildPostsAndParentPosts(\PDO $pdo, string $postId): array {
         $post = self::getPostByPostId($pdo, $postId);
         $children = self::getPostByOriginatedPost($pdo, $postId);
         $parents = self::getParentPosts($pdo, $postId);
-        return array('post'=>$post, 'children'=>$children, 'parents'=>$parents);
+        $related = self::getRelatedPosts($pdo, $postId);
+        return array('post'=>$post, 'children'=>$children, 'parents'=>$parents, 'related'=>$related);
     }
 
     /**

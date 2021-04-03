@@ -49,7 +49,7 @@ try {
         if(isset($postId) === true) {
             //get post by postId
             $queryData = Post::getPostAndChildPostsAndParentPosts($pdo, $postId);
-            $reply->data = (object)array('post'=>$queryData['post'], 'children'=>$queryData['children'], 'parents'=>$queryData['parents']);
+            $reply->data = (object)array('post'=>$queryData['post'], 'children'=>$queryData['children'], 'parents'=>$queryData['parents'], 'related'=>$queryData['related']);
         } else if(isset($postOrigin) === true) {
             //get post by originated post
             $reply->data = Post::getPostByOriginatedPost($pdo, $postOrigin);
@@ -163,7 +163,7 @@ try {
         }
 
         //check if post has relationships
-        $relationships = Relationships::getRelationshipByRelationshipsId($pdo, $postId);
+        $relationships = Relationships::getRelationshipByPostId($pdo, $postId);
             foreach ($relationships as $relationship){
                 $relationship->delete($pdo);
             }
