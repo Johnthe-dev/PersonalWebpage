@@ -207,3 +207,13 @@ h3 {
 .headerBorder{
     border-bottom: solid 5px #d67600;
 }
+
+a {
+    color: #197BBD;
+    cursor: pointer;
+}
+
+a:hover{
+    font-weight: bold;
+    text-decoration: underline #197BBD;
+}

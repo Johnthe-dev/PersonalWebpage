@@ -37,7 +37,7 @@ try {
 //sanitize search parameters
     $firstPost = filter_input(INPUT_GET, "firstPost", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $secondPost = filter_input(INPUT_GET, "secondPost", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-    $relationshipsId = filter_input(INPUT_GET, "relationshipsId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $postId = filter_input(INPUT_GET, "postId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
     if($method === "GET") {
         //set XSRF cookie
@@ -46,8 +46,8 @@ try {
         //get relationships
         if (empty($secondPost) !== true && empty($firstPost) !== true) {
             $reply->data = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
-        } elseif(empty($relationshipsId) !== true) {
-            $reply->data = Relationships::getRelationshipByRelationshipsId($pdo, $relationshipsId);
+        } elseif(empty($postId) !== true) {
+            $reply->data = Relationships::getRelationshipByPostId($pdo, $postId);
         } else {
             throw (new InvalidArgumentException("incorrect search parameters", 404));
         }

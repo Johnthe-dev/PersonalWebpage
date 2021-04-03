@@ -185,19 +185,19 @@ class Relationships implements \JsonSerializable
     /**
      * Gets Relationship By RelationshipsId, helpful for populating a list of posts a post is related to.
      * @param \PDO $pdo
-     * @param string $relationshipsId
+     * @param string $postId
      * @return array
      */
 
-    public static function getRelationshipByRelationshipsId(\PDO $pdo, string $relationshipsId) : array {
+    public static function getRelationshipByPostId(\PDO $pdo, string $postId) : array {
         //validate relationshipsFirstPost
-        $relationshipsId = filter_var($relationshipsId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $postId = filter_var($postId, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         //create query template
-        $query = "SELECT relationshipsFirstPost, relationshipsSecondPost from relationships WHERE relationshipsFirstPost = :relationshipsId OR relationshipsSecondPost = :relationshipsId";
+        $query = "SELECT relationshipsFirstPost, relationshipsSecondPost from relationships WHERE relationshipsFirstPost = :postId OR relationshipsSecondPost = :postId";
         $statement = $pdo->prepare($query);
         //bind the relationshipsId to the placeholder in MySQL
-        $parameters = ["relationshipsId" => $relationshipsId];
+        $parameters = ["postId" => $postId];
         $statement->execute($parameters);
         //builds an array of relationships
         $relationships = array();

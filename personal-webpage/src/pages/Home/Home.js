@@ -5,7 +5,7 @@ import logo from '../../images/logo.svg'
 import {motion} from "framer-motion";
 
 export const Home = () => {
-
+    window.localStorage.setItem('postPassword', '');
 // console.log(window.localStorage.getItem('jwt-token')?(JSON.parse(window.localStorage.getItem('jwt-token')).expiry >= new Date().getTime()?JSON.parse(window.localStorage.getItem('jwt-token')).expiry:null):null);
 //SVG Stuff
     let svgVariance = {};

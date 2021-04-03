@@ -4,22 +4,14 @@ import {Button, ButtonGroup, Col, Container, Modal, Row} from "react-bootstrap";
 import {getPostByPostId} from "../../shared/actions/post";
 import ReactMarkdown from 'react-markdown';
 import {httpConfig} from "../../shared/utils/http-config";
+import {Link} from "react-router-dom";
 
-export const Blog = () => {
-    let data =useSelector(state => (state.post ? state.post : []));
-    const dispatch = useDispatch();
-    const [postId, setPostId] = useState('john');
-    //set effects and inputs for async calls
-    const effects = () => {
-        dispatch(getPostByPostId(postId), [postId]);
-    };
-    const handlePostChange = (postId)=>{
-        setPostId(postId);
-    }
+export const CreatePost = (postId) => {
+    const [current, setPostId] = useState('john');
     const getPassword = ()=>{
         return prompt('Please enter password');
     }
-    const handleDelete = (postId)=>{
+    const handlePost = ()=>{
         let postPassword=window.localStorage.getItem("postPassword");
         if(!postPassword||(postPassword&&postPassword.length===0)){
             postPassword=getPassword();
@@ -42,7 +34,7 @@ export const Blog = () => {
                     <Button variant={'success'}>Make Child</Button>
                 </ButtonGroup>
             </Row>
-            <Row>
+            <Row className={"justify-content-around"}>
                 {data.post&&
                 <Col className={'col-9'}>
                     <Row>
@@ -52,54 +44,54 @@ export const Blog = () => {
                     </Row>
                     <Row>
                         <ReactMarkdown>
-                        {data.post.postContent}
+                            {data.post.postContent}
                         </ReactMarkdown>
                     </Row>
                 </Col>}
-                <Col className={'col-3'}>
+                <Col className={'col-2'}>
                     <Row>
-                        <h4 className={'pl-2'}>
+                        <h4>
                             Parents
                         </h4>
                         {data.parents&&data.parents.length>0?
                             <ul>
                                 {data.parents.map(parent => {
                                     return(
-                                        <li><a id={parent.postId} className={'link'} onClick={()=>{handlePostChange(parent.postId)}}>{parent.postTitle}</a></li>
+                                        <li><Link className={''} onClick={()=>{handlePostChange(parent.postId)}}>{parent.postTitle}</Link></li>
                                     )})}
                             </ul>
                             :
-                            <p className={'pl-3'}> No Parents for this post</p>
+                            <p> No Parents for this post</p>
                         }
                     </Row>
                     <Row>
-                        <h4 className={'pl-2'}>
+                        <h4>
                             Children
                         </h4>
                         {data.children&&data.children.length>0?
                             <ul>
                                 {data.children.map(child => {
-                            return(
-                                <li><a id={child.postId} className={'link'} onClick={()=>{handlePostChange(child.postId)}}>{child.postTitle}</a></li>
-                            )})}
+                                    return(
+                                        <li><a onClick={()=>{handlePostChange(child.postId)}}>{child.postTitle}</a></li>
+                                    )})}
                             </ul>
                             :
-                            <p className={'pl-3'}> No Children for this post</p>
+                            <p> No Children for this post</p>
                         }
                     </Row>
                     <Row>
-                        <h4 className={'pl-2'}>
+                        <h4>
                             Other Relations
                         </h4>
                         {data.related&&data.related.length >0?
                             <ul>
                                 {data.related.map(relation => {
                                     return(
-                                        <li><a id={relation.postId} className={'link'} onClick={()=>{handlePostChange(relation.postId)}}>{relation.postTitle}</a></li>
+                                        <li><a onClick={()=>{handlePostChange(relation.postId)}}>{relation.postTitle}</a></li>
                                     )})}
                             </ul>
                             :
-                            <p className={'pl-3'}> No Other Relations for this post.</p>
+                            <p> No Other Relations for this post.</p>
                         }
                     </Row>
                 </Col>
