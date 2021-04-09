@@ -19,6 +19,7 @@ import {Portfolio} from "./pages/Portfolio/Portfolio";
 import {Blog} from "./pages/Blog/Blog";
 import {Testing} from "./pages/Testing/Testing"
 import {combinedReducers} from "./shared/reducers";
+import {CreatePost} from "./pages/CreatePost/CreatePost";
 
 const store = createStore(combinedReducers, applyMiddleware(thunk));
 const Routing = (store) => (
@@ -39,6 +40,7 @@ const Routing = (store) => (
                                 <Route exact path='/HireMe' component={Portfolio}/>
                                 <Route exact path='/Testing' component={Testing}/>
                                 <Route exact path='/Blog' component={Blog}/>
+                                <Route exact path='/CreatePost/:parent' component={CreatePost} postId=':parent'/>
                             </Switch>
                         </Col>
                     </Row>

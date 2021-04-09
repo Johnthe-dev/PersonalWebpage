@@ -39,7 +39,7 @@ export const Blog = () => {
                 <h2>Blog</h2>
                 <ButtonGroup size="lg">
                     <Button variant={'warning'} onClick={()=>{handleDelete(postId);}}>Delete</Button>
-                    <Button variant={'success'}>Make Child</Button>
+                    <Button variant={'success'} href={'/CreatePost/'+postId}>Make Child</Button>
                 </ButtonGroup>
             </Row>
             <Row>
