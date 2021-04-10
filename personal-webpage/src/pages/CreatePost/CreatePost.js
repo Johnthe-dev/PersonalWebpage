@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, ButtonGroup, Col, Container, Modal, Row} from "react-bootstrap";
+import {Button, ButtonGroup, Col, Container, Modal, Nav, Row} from "react-bootstrap";
 import {getPostByPostId} from "../../shared/actions/post";
 import ReactMarkdown from 'react-markdown';
 import {httpConfig} from "../../shared/utils/http-config";
 import {Link} from "react-router-dom";
 
-export const CreatePost = (postId) => {
-    let [postContent, setPostContent] = useState('');
+export const CreatePost = ({match}) => {
+    const postId=match.params.parent;
+    const [postContent, setPostContent] = useState('');
+    const [postTitle, setPostTitle] = useState('');
     const getPassword = ()=>{
         return prompt('Please enter password');
     }
@@ -29,13 +31,17 @@ export const CreatePost = (postId) => {
         httpConfig.post("/apis/post/", data)
             .then(reply => {
                 if(reply.status === 200) {
-                    console.log('success');
+                    setTimeout(() => {
+                        window.location = "/Blog/" +reply.data
+                    }, 500)
                 }
             });
     }
     const handleContentChange = (post) =>{
         setPostContent(post);
-        console.log(postContent);
+    }
+    const handleTitleChange = (title) =>{
+        setPostTitle(title);
     }
     return (
         <Container className={'pb-4'}>
@@ -47,23 +53,46 @@ export const CreatePost = (postId) => {
                     <label htmlFor={'postTitleInput'}>Post Title</label>
                 </Col>
                 <Col>
-                    <input type={'text'} className={'form-control'} id={'postTitleInput'} placeholder={'Alligators of Southern Texas'}/>
+                    <input type={'text'} className={'form-control'} id={'postTitleInput'} value={postTitle} onChange={(e)=>{handleTitleChange(e.target.value)}}/>
                 </Col>
             </Row>
             <Row className={"pt-3 justify-content-around"}>
-                <label className={'h4'} htmlFor={'postContentInput'}>Post Content</label>
+                <Col className={'col-5'}>
+                    <Row className={"pt-3 justify-content-around"}>
+                        <label className={'h4'} htmlFor={'postContentInput'}>Post Content</label>
+                    </Row>
+                    <Row className={"pb-3 justify-content-around"}>
+                        {/*<ButtonGroup className={'pb-3'} size="lg">*/}
+                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'### '); document.getElementById('')}}>Header</Button>*/}
+                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'**');}}>Bold</Button>*/}
+                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'*');}}>Italic</Button>*/}
+                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'`');}}>Code</Button>*/}
+                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'![linkTitle]('+addLink()+')');}}>Link</Button>*/}
+                        {/*</ButtonGroup>*/}
+                        <textarea className={'form-control'} rows={'10'} id={'postContentInput'} value={postContent} onChange={(e)=>{handleContentChange(e.target.value)}}/>
+                    </Row>
+                </Col>
+                <Col className={'col-5'}>
+                    <Row className={"pt-3 justify-content-around"}>
+                        <label className={'h4'} htmlFor={'postContent'}>Post Preview</label>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Row>
+                                <h3>
+                                    {postTitle}
+                                </h3>
+                            </Row>
+                                <ReactMarkdown>
+                                    {postContent}
+                                </ReactMarkdown>
+                        </Col>
+                    </Row>
+                </Col>
             </Row>
-            <Row className={"pb-3 justify-content-around"}>
-                <ButtonGroup className={'pb-3'} size="lg">
-                    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'###');}}>Header</Button>
-                    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'**');}}>Bold</Button>
-                    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'*');}}>Italic</Button>
-                    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'<');}}>Blockquote</Button>
-                    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'`');}}>Code</Button>
-                    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'\n\n---\n\n');}}>Horizontal Line</Button>
-                    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'![linkTitle]('+addLink()+')');}}>Link</Button>
-                </ButtonGroup>
-                <textarea className={'form-control'} rows={'10'} id={'postContentInput'} value={postContent} onChange={(e)=>{handleContentChange(e.target.value)}}/>
+            <Row className={'justify-content-between'}>
+                <a href={'https://www.markdownguide.org/basic-syntax/'} target="_blank">View Markdown guide</a>
+                <Button variant={'success'} onClick={()=>{handlePost(postTitle, postContent)}}>Create Post</Button>
             </Row>
         </Container>
     )

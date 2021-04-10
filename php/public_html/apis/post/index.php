@@ -109,6 +109,7 @@ try {
             $post->insert($pdo);
             //update reply
             $reply->message = "A new Post has been created.";
+            $reply->data = $postId;
 
 //            stopping point
         } elseif($method === "PUT") {

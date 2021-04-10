@@ -39,7 +39,7 @@ const Routing = (store) => (
                                 <Route exact path='/ContactForm' component={ContactMe}/>
                                 <Route exact path='/HireMe' component={Portfolio}/>
                                 <Route exact path='/Testing' component={Testing}/>
-                                <Route exact path='/Blog' component={Blog}/>
+                                <Route exact path='/Blog/:postId' component={Blog} postId=':postId'/>
                                 <Route exact path='/CreatePost/:parent' component={CreatePost} postId=':parent'/>
                             </Switch>
                         </Col>

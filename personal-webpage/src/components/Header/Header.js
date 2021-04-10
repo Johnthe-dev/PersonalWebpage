@@ -365,7 +365,7 @@ export const Header = () => {
                     <Nav.Link disabled={PageActive['Blog']} active={PageActive['Blog']} onClick={() => {
                         navigate('Blog');
                         setTimeout(() => {
-                            window.location = "/Blog"
+                            window.location = "/Blog/john"
                         }, 500)}}><p>Blog</p>
                     </Nav.Link>
                 </Nav>

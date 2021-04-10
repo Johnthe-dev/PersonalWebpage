@@ -5,10 +5,10 @@ import {getPostByPostId} from "../../shared/actions/post";
 import ReactMarkdown from 'react-markdown';
 import {httpConfig} from "../../shared/utils/http-config";
 
-export const Blog = () => {
+export const Blog = ({match}) => {
     let data =useSelector(state => (state.post ? state.post : []));
     const dispatch = useDispatch();
-    const [postId, setPostId] = useState('john');
+    const [postId, setPostId] = useState(match.params.postId);
     //set effects and inputs for async calls
     const effects = () => {
         dispatch(getPostByPostId(postId), [postId]);
@@ -44,17 +44,15 @@ export const Blog = () => {
             </Row>
             <Row>
                 {data.post&&
-                <Col className={'col-9'}>
+                <Col className={'col-8'}>
                     <Row>
                         <h3>
                             {data.post.postTitle}
                         </h3>
                     </Row>
-                    <Row>
-                        <ReactMarkdown>
+                    <ReactMarkdown>
                         {data.post.postContent}
-                        </ReactMarkdown>
-                    </Row>
+                    </ReactMarkdown>
                 </Col>}
                 <Col className={'col-3'}>
                     <Row>
