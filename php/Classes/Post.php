@@ -328,22 +328,26 @@ class Post implements \JsonSerializable {
      */
     public static function getPostByPostContentAndTitle(\PDO $pdo, string $postSearchTerms): array
     {
-        //trim and filter out invalid input
-        $postSearchTerms = trim($postSearchTerms);
-        $postSearchTerms = filter_var($postSearchTerms, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $postSearchTerms = '%' . $postSearchTerms . '%';
-
         //checks if string length is appropriate
         if (strlen($postSearchTerms) > 250) {
             throw (new \RangeException("Post Class Exception: postSearchTerms are too long"));
         }
 
+        //trim and filter out invalid input
+        $postSearchTerms = trim($postSearchTerms);
+        $postSearchTerms = filter_var($postSearchTerms, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $postSearchTerms = '%' . $postSearchTerms . '%';
+        $postContentSearchTerms = str_replace(' ', '% AND postContent LIKE %', $postSearchTerms);
+        $postTitleSearchTerms = str_replace(' ', '% AND postTitle LIKE %', $postSearchTerms);
+
         //create query template
-        $query = "SELECT postId, postContent, postDate, postTitle FROM post WHERE postContent LIKE :postSearchTerms OR postTitle LIKE :postSearchTerms";
+        $query = "SELECT postId, postContent, postDate, postTitle FROM post WHERE (postContent LIKE :postContentSearchTerms) OR (postTitle LIKE :postTitleSearchTerms)";
         $statement = $pdo->prepare($query);
 
         //set parameters to execute
-        $parameters = ["postSearchTerms" => $postSearchTerms];
+        $parameters = ["postContentSearchTerms" => $postContentSearchTerms,
+            "postTitleSearchTerms" => $postTitleSearchTerms
+            ];
         $statement->execute($parameters);
 
         //grab post from MySQL
@@ -493,21 +497,17 @@ class Post implements \JsonSerializable {
         if(strlen($postId)%4!==0){
             throw (new \RangeException("Post Class Exception: postId not accurate."));
         }
-        $postId = substr($postId, 0,strlen($postId)-4);
         $posts = array();
-        while(strlen($postId)>=4){
             $query = "SELECT p.postId, p.postContent, p.postDate, p.postTitle from post p left join relationships lr on 
             lr.relationshipsFirstPost = p.postId left join relationships rr on rr.relationshipsSecondPost = p.postId
             WHERE rr.relationshipsFirstPost = :postId OR lr.relationshipsSecondPost = :postId";
             $statement = $pdo->prepare($query);
-
             //set parameters to execute
             $parameters = ["postId" => $postId];
             $statement->execute($parameters);
 
             //grab post from MySQL
             try {
-                $post = null;
                 $statement->setFetchMode(\PDO::FETCH_ASSOC);
                 $row = $statement->fetch();
                 if ($row !== false) {
@@ -518,8 +518,6 @@ class Post implements \JsonSerializable {
                 //if row can't be converted rethrow it
                 throw(new \PDOException($exception->getMessage(), 0, $exception));
             }
-            $postId = substr($postId, 0,strlen($postId)-4);
-        }
         return ($posts);
     }
 

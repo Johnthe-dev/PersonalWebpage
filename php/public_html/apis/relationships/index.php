@@ -2,9 +2,8 @@
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
-require_once(dirname(__DIR__, 6) . "/apache/Secrets.php");
+require_once("/etc/apache2/JohnTheDev/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
-require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
 use JOHNTHEDEV\PersonalWebsite\{Relationships, Post};
 
@@ -26,11 +25,11 @@ if(session_status() !== PHP_SESSION_ACTIVE) {
 $reply = new stdClass();
 $reply->status = 200;
 $reply->data = null;
-
 try {
     //grab the mySQL connection
-    $secrets = new \Secrets("var/www/apache/secret/johnTheDev.ini");
+    $secrets = new \Secrets("var/www/apache/secret/JohnTheDev.ini");
     $pdo = $secrets->getPdoObject();
+    $password = $secrets->getInsertPassword();
 
     //determine which HTTP method was used
     $method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
@@ -38,6 +37,7 @@ try {
     $firstPost = filter_input(INPUT_GET, "firstPost", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $secondPost = filter_input(INPUT_GET, "secondPost", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $postId = filter_input(INPUT_GET, "postId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+    $postPassword = filter_input(INPUT_GET, "postPassword", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
     if($method === "GET") {
         //set XSRF cookie
@@ -51,15 +51,14 @@ try {
         } else {
             throw (new InvalidArgumentException("incorrect search parameters", 404));
         }
-    } elseif ($method === "POST" || $method === "DELETE") {
+    } elseif ($method === "POST") {
         //decode the response from the front end
         $requestContent = file_get_contents("php://input");
         $requestObject = json_decode($requestContent);
 
         //get password from secret creds and make sure correct password was supplied
-        $password = $secrets->getInsertPassword();
         if(password_verify($requestObject->postPassword, $password) === false) {
-            throw(new \InvalidArgumentException("Password is incorrect.", 401));
+            throw(new \InvalidArgumentException("Password is incorrect. ".$password, 401));
         }
 
         if(empty($requestObject->firstPost) === true) {
@@ -77,8 +76,6 @@ try {
         if(Post::getPostByPostId($pdo, $requestObject->secondPost) === null) {
             throw (new \InvalidArgumentException("The second post for this Relationship doesn't exist", 405));
         }
-
-        if($method === "POST") {
             //enforce that the end user has a XSRF token.
             verifyXsrf();
             $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $requestObject->firstPost, $requestObject->secondPost);
@@ -92,9 +89,11 @@ try {
         } elseif($method === "DELETE") {
             //enforce the end user has a XSRF token.
             verifyXsrf();
-
+        if(password_verify($postPassword, $password) === false) {
+            throw(new \InvalidArgumentException("Password is incorrect.", 401));
+        }
             //get relationship to delete by composite id
-            $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $requestObject->firstPost, $requestObject->secondPost);
+            $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
             if($relationship === null) {
                 throw (new RuntimeException("Relationship Does Not Exist", 404));
             }
@@ -104,9 +103,8 @@ try {
 
             //update message
             $reply->message = "Relationship has been deleted.";
-        }
-        // if any other HTTP request is sent throw an exception
-    } else {
+        } else {
+         // if any other HTTP request is sent throw an exception
         throw new \InvalidArgumentException("Invalid http request", 405);
     }
     //catch any exceptions that is thrown and update the reply status and message

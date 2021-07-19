@@ -19,14 +19,12 @@ FROM webdevops/php-apache-dev:8.0-alpine
 
 # copy vendor into the project from the prebuild stage
 COPY --from=vendor /app/vendor/ /var/www/vendor/
-# add curl to allow cms communication
-RUN apk add curl
 
-RUN mkdir /etc/apache2/nmsavin
-COPY secret/config /etc/apache2/nmsavin
+RUN mkdir /etc/apache2/JohnTheDev
+COPY secret/config /etc/apache2/JohnTheDev
 
-RUN touch /etc/apache2/nmsavin/SecretCred.ini
-RUN php /etc/apache2/nmsavin/SecretConfig.php
+RUN touch /etc/apache2/JohnTheDev/SecretCred.ini
+RUN php /etc/apache2/JohnTheDev/SecretConfig.php
 
 # configure Secrets for protected information
 WORKDIR /var/www/

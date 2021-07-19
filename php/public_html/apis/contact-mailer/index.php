@@ -1,8 +1,8 @@
 <?php
 //require dependencies
-require_once("../../../vendor/autoload.php");
+require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
-require_once("../../../../../../apache/mail-config.php"); //serves secret data
+require_once("/etc/apache2/JohnTheDev/mail-config.php"); //serves secret data
 
 /**
  * API contact-mailer for my PWP web application project.
