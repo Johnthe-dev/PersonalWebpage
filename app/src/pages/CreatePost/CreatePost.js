@@ -1,10 +1,7 @@
-import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {Button, ButtonGroup, Col, Container, Modal, Nav, Row} from "react-bootstrap";
-import {getPostByPostId} from "../../shared/actions/post";
+import React, {useState} from "react";
+import {Button,  Col, Container,  Row} from "react-bootstrap";
 import ReactMarkdown from 'react-markdown';
 import {httpConfig} from "../../shared/utils/http-config";
-import {Link} from "react-router-dom";
 
 export const CreatePost = ({match}) => {
     const postId=match.params.parent;

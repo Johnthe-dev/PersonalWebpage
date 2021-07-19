@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "axios": "^0.21.1",
+    "http-proxy-middleware": "^2.0.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0"
   }

@@ -1,6 +1,7 @@
 import {Button, Form, FormControl, Image, Nav, Navbar} from "react-bootstrap";
 import React, {useState, useEffect} from "react";
 import {motion} from "framer-motion";
+import {PostSearch} from "../PostSearch/PostSearch";
 
 export const Header = () => {
     const scaleFactor = 3;
@@ -96,6 +97,9 @@ export const Header = () => {
             break;
         case '/HireMe':
             PageActive['Hire Me'] = true;
+            break;
+        case '/Blog':
+            PageActive['Blog'] = true;
             break;
         default:
             break;
@@ -369,10 +373,7 @@ export const Header = () => {
                         }, 500)}}><p>Blog</p>
                     </Nav.Link>
                 </Nav>
-                <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
-                    <Button variant="outline-primary">Search</Button>
-                </Form>
+                <PostSearch/>
             </Navbar.Collapse>
         </Navbar>
     )
