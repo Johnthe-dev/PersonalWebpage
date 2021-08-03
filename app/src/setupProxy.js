@@ -1,9 +1,10 @@
 const proxy = require('http-proxy-middleware');
-
+//
 module.exports = function(app) {
-    app.use(proxy('/apis', {
+    app.use('/apis',
+        proxy({
         logLevel: 'debug',
-        target: "http://138.68.44.162/public_html/",
+        target: "https://johnson-rodgers.com/public_html/",
         changeOrigin: true,
         secure: true,
     }));
