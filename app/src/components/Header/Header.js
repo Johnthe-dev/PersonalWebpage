@@ -9,8 +9,8 @@ export const Header = () => {
     const [logoAnimate, setLogoAnimate] = useState({});
     const PageActive = useState({
         'Home': false,
-        'Hire Me': false,
-        'Contact Me': false,
+        'Portfolio': false,
+        'ContactMe': false,
         'Blog': false
     });
     let logoIconRoll = {
@@ -93,10 +93,10 @@ export const Header = () => {
             PageActive['Home'] = true;
             break;
         case "/ContactForm":
-            PageActive['Contact Me'] = true;
+            PageActive['ContactMe'] = true;
             break;
-        case '/HireMe':
-            PageActive['Hire Me'] = true;
+        case '/Portfolio':
+            PageActive['Portfolio'] = true;
             break;
         case '/Blog':
             PageActive['Blog'] = true;
@@ -117,7 +117,7 @@ export const Header = () => {
             }
         } else {
             if (location === 'lines') {
-                if (currentPage === 'HireMe') {
+                if (currentPage === 'Portfolio') {
                     return lines(line, square);
                 } else
                     return {
@@ -125,7 +125,7 @@ export const Header = () => {
                         visible: {}
                     };
             } else if (location === 'rectangles') {
-                if (currentPage === 'HireMe') {
+                if (currentPage === 'Portfolio') {
 
                     return {
                         hidden: {},
@@ -150,14 +150,14 @@ export const Header = () => {
                     ease: 'easeInOut'
                 }
             });
-        } else if(destination==='Hire Me'){
+        } else if(destination==='Portfolio'){
             setLogoAnimate({
                 y: 100, transition: {
                     duration: .5,
                     ease: 'easeInOut'
                 }
             })
-        } else if(destination==='Contact Me'){
+        } else if(destination==='ContactForm'){
             setLogoAnimate({
                 scale: 0,
                 transition: {
@@ -354,14 +354,13 @@ export const Header = () => {
                         }, 500)
                     }}><p>Home</p>
                     </Nav.Link>
-                    <Nav.Link disabled={PageActive['Hire Me']} active={PageActive['Hire Me']} onClick={() => {
-                        navigate('Hire Me');
+                    <Nav.Link disabled={PageActive['Portfolio']} active={PageActive['Portfolio']} onClick={() => {
+                        navigate('Portfolio');
                         setTimeout(() => {
-                            window.location = "/HireMe"
-                        }, 500)}}><p>Hire
-                        Me</p></Nav.Link>
-                    <Nav.Link disabled={PageActive['Contact Me']} active={PageActive['Contact Me']} onClick={() => {
-                                  navigate("Contact Me");
+                            window.location = "/Portfolio"
+                        }, 500)}}><p>Portfolio</p></Nav.Link>
+                    <Nav.Link disabled={PageActive['ContactMe']} active={PageActive['ContactMe']} onClick={() => {
+                                  navigate("ContactForm");
                                   setTimeout(() => {
                                       window.location = "/ContactForm"
                                   }, 500)}}>
