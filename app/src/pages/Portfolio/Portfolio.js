@@ -185,13 +185,7 @@ export const Portfolio = () => {
             </Row>
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center"}>
                 <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
-                    <div className="hover-effect">
-                        <img className="img-responsive" src={NMSavin} alt="Screen shot of NMSavin"/>
-                            <div className="overlay">
-                                <h2>NMSAVIN</h2>
-                                <a className="info" href="#">Learn More</a>
-                            </div>
-                    </div>
+                    <img className="img-responsive" src={NMSavin} alt="Screen shot of NMSavin"/>
                 </Col>
                 <Col>
                     <h4 className={'pb-3 pb-md-4 px-4'}>Victim Notification System</h4>
@@ -204,13 +198,7 @@ export const Portfolio = () => {
             </Row>
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center flex-row-reverse"}>
                 <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
-                    <div className="hover-effect">
-                        <img className="img-responsive" src={ABQVeterans} alt="Screen shot of ABQ Veterans"/>
-                        <div className="overlay">
-                            <h2>ABQVeterans</h2>
-                            <a className="info" href="#">Learn More</a>
-                        </div>
-                    </div>
+                    <img className="img-responsive" src={ABQVeterans} alt="Screen shot of ABQ Veterans"/>
                 </Col>
                 <Col>
                     <h4 className={'pb-3 pb-md-4 px-4'}>ABQ Veterans</h4>
@@ -222,13 +210,7 @@ export const Portfolio = () => {
             </Row>
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center"}>
                 <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
-                    <div className="hover-effect">
-                        <img className="img-responsive" src={rphiRebuild} alt="Screen shot of local contractor's website"/>
-                        <div className="overlay">
-                            <h2>RPHI Rebuild</h2>
-                            <a className="info" href="#">Learn More</a>
-                        </div>
-                    </div>
+                    <img className="img-responsive" src={rphiRebuild} alt="Screen shot of local contractor's website"/>
                 </Col>
                 <Col>
                     <h4 className={'pb-3 pb-md-4 px-4'}>Rodgers Plumbing and Heating, Inc</h4>

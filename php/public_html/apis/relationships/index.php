@@ -4,6 +4,7 @@ require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once("/etc/apache2/JohnTheDev/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
+require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 
 use JOHNTHEDEV\PersonalWebsite\{Relationships, Post};
 
@@ -29,7 +30,6 @@ try {
     //grab the mySQL connection
     $secrets = new \Secrets("var/www/apache/secret/JohnTheDev.ini");
     $pdo = $secrets->getPdoObject();
-    $password = $secrets->getInsertPassword();
 
     //determine which HTTP method was used
     $method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
@@ -55,12 +55,8 @@ try {
         //decode the response from the front end
         $requestContent = file_get_contents("php://input");
         $requestObject = json_decode($requestContent);
-
-        //get password from secret creds and make sure correct password was supplied
-        if(password_verify($requestObject->postPassword, $password) === false) {
-            throw(new \InvalidArgumentException("Password is incorrect. ".$password, 401));
-        }
-
+        verifyXsrf();
+        validateVerifyJwt();
         if(empty($requestObject->firstPost) === true) {
             throw (new \InvalidArgumentException("No first post for this Relationship", 405));
         }
@@ -89,9 +85,7 @@ try {
         } elseif($method === "DELETE") {
             //enforce the end user has a XSRF token.
             verifyXsrf();
-        if(password_verify($postPassword, $password) === false) {
-            throw(new \InvalidArgumentException("Password is incorrect.", 401));
-        }
+            validateVerifyJwt();
             //get relationship to delete by composite id
             $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
             if($relationship === null) {

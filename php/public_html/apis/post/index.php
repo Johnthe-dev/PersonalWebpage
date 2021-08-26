@@ -4,6 +4,7 @@ require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once("/etc/apache2/JohnTheDev/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
+require_once dirname(__DIR__, 3) . "/lib/jwt.php";
 
 use JOHNTHEDEV\PersonalWebsite\{Post, Relationships};
 
@@ -61,6 +62,7 @@ try {
             $reply->data = Post::getAllPosts($pdo);
         }
     } elseif($method === "POST" || $method === "PUT") {
+        validateVerifyJwt();
         //retrieves JSON package that was sent by the user and stores it in $requestContent using file_get_contents
         $requestContent = file_get_contents("php://input");
 
@@ -144,14 +146,7 @@ try {
             $reply->message = "Post updated";
         }
     } elseif($method === "DELETE") {
-        if(empty($postPassword) === true) {
-            throw(new \InvalidArgumentException("The Password field is empty.", 400));
-        }
-        //get password from secret creds and make sure correct password was supplied
-        $password = $secrets->getInsertPassword();
-        if(password_verify($postPassword, $password) === false) {
-            throw(new \InvalidArgumentException("Password is incorrect.", 401));
-        }
+        validateVerifyJwt();
         //retrieve the post to be deleted
         $post = Post::getPostByPostId($pdo, $postId);
 
