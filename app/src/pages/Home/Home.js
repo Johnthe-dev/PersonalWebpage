@@ -6,20 +6,20 @@ export const Home = () => {
     window.localStorage.setItem('postPassword', '');
     return (
             <Container>
-                <Row className={"py-5 mr-0 justify-content-around"}>
+                <Row className={"mt-4 justify-content-around"}>
                     <h2>Solve quotidian problems with code.</h2>
                 </Row>
                 <Row className={"mr-0 d-flex align-items-center justify-content-around pb-5"}>
-                    <Col className={'col-7 text-center'}>
+                    <Col className={'col-12 text-center'}>
                         <img id={'johnPicture'} alt={'Picture of John'} src={headshot}/>
                     </Col>
 
-                    <Col className={'col-5 text-left'}>
+                    <Col className={'col-12 text-left'}>
                         <p>
                             I am John Johnson-Rodgers, a full stack web
                             application developer based in Albuquerque,
                             New Mexico. I invite you to head to the Blog
-                            to view little useful facts and resources that
+                            to view useful facts and resources that
                             help me with my day to day. If you would like
                             to learn about the technologies I am familiar
                             with and projects I have worked on, visit the

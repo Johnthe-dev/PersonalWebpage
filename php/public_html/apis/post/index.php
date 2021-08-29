@@ -18,7 +18,7 @@ use JOHNTHEDEV\PersonalWebsite\{Post, Relationships};
  * @version 1.0.0
  */
 //verify the session, start if inactive
-if(session_status() !== PHP_SESSION_ACTIVE) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
@@ -41,27 +41,28 @@ try {
     $postSearchTerms = filter_input(INPUT_GET, "postSearchTerms", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
     //check if postId is empty and method is delete or put
-    if(($method === "DELETE" || $method === "PUT") && (empty($postId) === true)) {
+    if (($method === "DELETE" || $method === "PUT") && (empty($postId) === true)) {
         throw(new InvalidArgumentException("postId can not be empty when deleting of changing", 400));
     }
-    if($method === "GET") {
+    if ($method === "GET") {
         //set xsrf cookie
         setXsrfCookie();
-        if(isset($postId) === true) {
+        if (isset($postId) === true) {
             //get post by postId
             $queryData = Post::getPostAndChildPostsAndParentPosts($pdo, $postId);
-            $reply->data = (object)array('post'=>$queryData['post'], 'children'=>$queryData['children'], 'parents'=>$queryData['parents'], 'related'=>$queryData['related']);
-        } else if(isset($postOrigin) === true) {
+            $reply->data = (object)array('post' => $queryData['post'], 'children' => $queryData['children'], 'parents' => $queryData['parents'], 'related' => $queryData['related']);
+        } else if (isset($postOrigin) === true) {
             //get post by originated post
             $reply->data = Post::getPostByOriginatedPost($pdo, $postOrigin);
-        } else if(isset($postSearchTerms) === true) {
+        } else if (isset($postSearchTerms) === true) {
             //get post by search terms
             $reply->data = Post::getPostByPostContentAndTitle($pdo, $postSearchTerms);
         } else {
             //get all posts
             $reply->data = Post::getAllPosts($pdo);
         }
-    } elseif($method === "POST" || $method === "PUT") {
+    } elseif ($method === "POST" || $method === "PUT") {
+        verifyXsrf();
         validateVerifyJwt();
         //retrieves JSON package that was sent by the user and stores it in $requestContent using file_get_contents
         $requestContent = file_get_contents("php://input");
@@ -69,24 +70,14 @@ try {
         //Decodes content and stores result in $requestObject
         $requestObject = json_decode($requestContent);
 
-        if(empty($requestObject->postPassword) === true) {
-            throw(new \InvalidArgumentException("The Password field is empty.", 400));
-        }
-
-        //get password from secret creds and make sure correct password was supplied
-        $password = $secrets->getInsertPassword();
-        if(password_verify($requestObject->postPassword, $password) === false) {
-            throw(new \InvalidArgumentException("Password is incorrect.", 401));
-        }
-
-        if($method === "POST") {
-            if(isset($requestObject->postTitle) !== true) {
+        if ($method === "POST") {
+            if (isset($requestObject->postTitle) !== true) {
                 throw(new \InvalidArgumentException("There is no title.", 400));
             }
-            if(empty($requestObject->postId)){
+            if (empty($requestObject->postId)) {
                 $postId = 'john';
                 $post = Post::getPostByPostId($pdo, $postId);
-                if($post !== null){
+                if ($post !== null) {
                     throw(new \InvalidArgumentException("Original post already corrected", 400));
                 };
             } else {
@@ -97,9 +88,9 @@ try {
                     for ($i = 0; $i < 4; $i++) {
                         $randstring .= $characters[rand(0, strlen($characters))];
                     }
-                    $postId = $requestObject->postId.$randstring;
+                    $postId = $requestObject->postId . $randstring;
                     $post = Post::getPostByPostId($pdo, $postId);
-                    if($post === null){
+                    if ($post === null) {
                         $exists = false;
                     }
                 }
@@ -114,10 +105,10 @@ try {
             $reply->data = $postId;
 
 //            stopping point
-        } elseif($method === "PUT") {
+        } elseif ($method === "PUT") {
 
             //makes sure required fields are available
-            if(empty($postId) === true) {
+            if (empty($postId) === true) {
                 throw(new \InvalidArgumentException("The Post Id field is empty.", 400));
             }
 
@@ -125,15 +116,15 @@ try {
             $post = Post::getPostByPostId($pdo, $postId);
 
             //make sure it exists
-            if($post === null) {
+            if ($post === null) {
                 throw (new RuntimeException("Post to be edited does not exist", 404));
             }
-            if(isset($requestObject->postContent) !== true) {
+            if (isset($requestObject->postContent) !== true) {
                 $postContent = $post->getPostContent();
             } else {
                 $postContent = $requestObject->postContent;
             }
-            if(isset($requestObject->postTitle) !== true) {
+            if (isset($requestObject->postTitle) !== true) {
                 $postTitle = $post->getPostTitle();
             } else {
                 $postTitle = $requestObject->postTitle;
@@ -145,24 +136,25 @@ try {
             //update reply
             $reply->message = "Post updated";
         }
-    } elseif($method === "DELETE") {
+    } elseif ($method === "DELETE") {
+        verifyXsrf();
         validateVerifyJwt();
         //retrieve the post to be deleted
         $post = Post::getPostByPostId($pdo, $postId);
 
         //make sure it exists
-        if($post === null) {
+        if ($post === null) {
             throw (new RuntimeException("Post to be deleted does not exist", 404));
         }
-        if(!empty(Post::getPostByOriginatedPost($pdo, $postId))){
+        if (!empty(Post::getPostByOriginatedPost($pdo, $postId))) {
             throw (new RuntimeException("Post to be deleted has children, you monster!", 404));
         }
 
         //check if post has relationships
         $relationships = Relationships::getRelationshipByPostId($pdo, $postId);
-            foreach ($relationships as $relationship){
-                $relationship->delete($pdo);
-            }
+        foreach ($relationships as $relationship) {
+            $relationship->delete($pdo);
+        }
         //delete post
         $post->delete($pdo);
         //update reply
@@ -172,7 +164,7 @@ try {
         throw (new InvalidArgumentException("Invalid HTTP method request", 405));
     }
     //update the $reply->status $reply->message
-} catch(\Exception | \TypeError $exception) {
+} catch (\Exception | \TypeError $exception) {
     $reply->status = $exception->getCode();
     $reply->message = $exception->getMessage();
 }

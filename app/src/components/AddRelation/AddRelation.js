@@ -3,11 +3,13 @@ import React, {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getPostByPostContentAndTitle} from "../../shared/actions/post";
 import {httpConfig} from "../../shared/utils/http-config";
+import {UseJwt} from "../../shared/utils/JwtHelpers";
 
 export const AddRelation = (params) => {
     let targetPostId = params.postId;
     let currentRelations = params.relations;
     let posts =useSelector(state => (state.post ? state.post : []));
+    const jwtToken = UseJwt();
     const dispatch = useDispatch();
     const [relateTerms, setRelateTerms] = useState('');
     const [show, setShow] = useState(false);
@@ -19,17 +21,14 @@ export const AddRelation = (params) => {
         return prompt('Please enter password');
     }
     const handleCreateRelation= (relatedPostId)=>{
-        let postPassword=window.localStorage.getItem("postPassword");
-        if(!postPassword||(postPassword&&postPassword.length===0)){
-            postPassword=getPassword();
-            window.localStorage.setItem('postPassword', postPassword);
-        }
         let data= {
             firstPost: targetPostId,
-            secondPost: relatedPostId,
-            postPassword:postPassword
+            secondPost: relatedPostId
         }
-        httpConfig.post("/apis/relationships/", data)
+        httpConfig.post("/apis/relationships/", data, {
+            headers: {
+                'X-JWT-TOKEN': jwtToken
+            }})
             .then(reply => {
                 if(reply.status === 200) {
                     setTimeout(() => {

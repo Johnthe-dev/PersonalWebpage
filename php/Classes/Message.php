@@ -190,7 +190,7 @@ class Message implements \JsonSerializable {
         $statement = $pdo->prepare($query);
         //create parameters for query
         $parameters = [
-            "messageId" => $this->messageId,
+            "messageId" => $this->messageId->getBytes(),
             "messageContent" => $this->messageContent,
             "messageDate" => $this->messageDate->format("Y-m-d H:i:s")
         ];
@@ -212,7 +212,7 @@ class Message implements \JsonSerializable {
         $statement = $pdo->prepare($query);
         // set parameters to execute query
         $parameters = [
-            "messageId" => $this->messageId,
+            "messageId" => $this->messageId->getBytes(),
             "messageContent" => $this->messageContent,
             "messageDate" => $this->messageDate->format("Y-m-d H:i:s")
         ];
@@ -233,7 +233,7 @@ class Message implements \JsonSerializable {
         $query = "DELETE FROM message WHERE messageId = :messageId";
         $statement = $pdo->prepare($query);
         //set parameters to execute query
-        $parameters = ["messageId" => $this->messageId];
+        $parameters = ["messageId" => $this->messageId->getBytes()];
         $statement->execute($parameters);
     }
 //
@@ -323,11 +323,11 @@ class Message implements \JsonSerializable {
     public function jsonSerialize(): array
     {
         $fields = get_object_vars($this);
-        if ($this->messageDate !== null) {
-            $fields["messageDate"] = $this->messageDate->format("Y-m-d H:i:s");
-        }
         if($this->messageId !== null) {
             $fields["messageId"] = $this->messageId->toString();
+        }
+        if ($this->messageDate !== null) {
+            $fields["messageDate"] = $this->messageDate->format("Y-m-d H:i:s");
         }
         return ($fields);
     }

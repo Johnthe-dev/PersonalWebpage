@@ -2,6 +2,7 @@ import {Button, Form, FormControl, Image, Nav, Navbar} from "react-bootstrap";
 import React, {useState, useEffect} from "react";
 import {motion} from "framer-motion";
 import {PostSearch} from "../PostSearch/PostSearch";
+import {SignInModal} from "../SignInForm/SignInModal";
 
 export const Header = () => {
     const scaleFactor = 3;
@@ -373,6 +374,7 @@ export const Header = () => {
                     </Nav.Link>
                 </Nav>
                 <PostSearch/>
+                <SignInModal/>
             </Navbar.Collapse>
         </Navbar>
     )

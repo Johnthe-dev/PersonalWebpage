@@ -2,11 +2,13 @@ import React, {useState} from "react";
 import {Button,  Col, Container,  Row} from "react-bootstrap";
 import ReactMarkdown from 'react-markdown';
 import {httpConfig} from "../../shared/utils/http-config";
+import {UseJwt} from "../../shared/utils/JwtHelpers";
 
 export const CreatePost = ({match}) => {
     const postId=match.params.parent;
     const [postContent, setPostContent] = useState('');
     const [postTitle, setPostTitle] = useState('');
+    const jwtToken = UseJwt();
     const getPassword = ()=>{
         return prompt('Please enter password');
     }
@@ -14,18 +16,15 @@ export const CreatePost = ({match}) => {
         return prompt('Enter the url');
     }
     const handlePost = (title, content)=>{
-        let postPassword=window.localStorage.getItem("postPassword");
-        if(!postPassword||(postPassword&&postPassword.length===0)){
-            postPassword=getPassword();
-            window.localStorage.setItem('postPassword', postPassword);
-        }
         let data = {
             postId: postId,
             postTitle: title,
-            postContent: content,
-            postPassword: postPassword
+            postContent: content
         };
-        httpConfig.post("/apis/post/", data)
+        httpConfig.post("/apis/post/", data, {
+            headers: {
+                'X-JWT-TOKEN': jwtToken
+            }})
             .then(reply => {
                 if(reply.status === 200) {
                     setTimeout(() => {

@@ -18,7 +18,7 @@ use JOHNTHEDEV\PersonalWebsite\{Relationships, Post};
  * @version 1.0.0
  */
 //verify the session, start if inactive
-if(session_status() !== PHP_SESSION_ACTIVE) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
@@ -39,14 +39,14 @@ try {
     $postId = filter_input(INPUT_GET, "postId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     $postPassword = filter_input(INPUT_GET, "postPassword", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-    if($method === "GET") {
+    if ($method === "GET") {
         //set XSRF cookie
         setXsrfCookie();
 
         //get relationships
         if (empty($secondPost) !== true && empty($firstPost) !== true) {
             $reply->data = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
-        } elseif(empty($postId) !== true) {
+        } elseif (empty($postId) !== true) {
             $reply->data = Relationships::getRelationshipByPostId($pdo, $postId);
         } else {
             throw (new InvalidArgumentException("incorrect search parameters", 404));
@@ -57,57 +57,57 @@ try {
         $requestObject = json_decode($requestContent);
         verifyXsrf();
         validateVerifyJwt();
-        if(empty($requestObject->firstPost) === true) {
+        if (empty($requestObject->firstPost) === true) {
             throw (new \InvalidArgumentException("No first post for this Relationship", 405));
         }
 
-        if(empty($requestObject->secondPost) === true) {
+        if (empty($requestObject->secondPost) === true) {
             throw (new \InvalidArgumentException("No second post for this Relationship", 405));
         }
 
-        if(Post::getPostByPostId($pdo, $requestObject->firstPost) === null) {
+        if (Post::getPostByPostId($pdo, $requestObject->firstPost) === null) {
             throw (new \InvalidArgumentException("The first post for this Relationship doesn't exist", 405));
         }
 
-        if(Post::getPostByPostId($pdo, $requestObject->secondPost) === null) {
+        if (Post::getPostByPostId($pdo, $requestObject->secondPost) === null) {
             throw (new \InvalidArgumentException("The second post for this Relationship doesn't exist", 405));
         }
-            //enforce that the end user has a XSRF token.
-            verifyXsrf();
-            $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $requestObject->firstPost, $requestObject->secondPost);
-            if($relationship===null){
-                $useful = new Relationships($requestObject->firstPost, $requestObject->secondPost);
-                $useful->insert($pdo);
-                $reply->message = "Relationship created";
-            } else {
-                throw (new \InvalidArgumentException("This relationship already exists", 404));
-            }
-        } elseif($method === "DELETE") {
-            //enforce the end user has a XSRF token.
-            verifyXsrf();
-            validateVerifyJwt();
-            //get relationship to delete by composite id
-            $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
-            if($relationship === null) {
-                throw (new RuntimeException("Relationship Does Not Exist", 404));
-            }
-
-            //delete relationship
-            $relationship->delete($pdo);
-
-            //update message
-            $reply->message = "Relationship has been deleted.";
+        //enforce that the end user has a XSRF token.
+        verifyXsrf();
+        $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $requestObject->firstPost, $requestObject->secondPost);
+        if ($relationship === null) {
+            $useful = new Relationships($requestObject->firstPost, $requestObject->secondPost);
+            $useful->insert($pdo);
+            $reply->message = "Relationship created";
         } else {
-         // if any other HTTP request is sent throw an exception
+            throw (new \InvalidArgumentException("This relationship already exists", 404));
+        }
+    } elseif ($method === "DELETE") {
+        //enforce the end user has a XSRF token.
+        verifyXsrf();
+        validateVerifyJwt();
+        //get relationship to delete by composite id
+        $relationship = Relationships::getRelationshipByRelationshipsFirstPostAndRelationshipsSecondPost($pdo, $firstPost, $secondPost);
+        if ($relationship === null) {
+            throw (new RuntimeException("Relationship Does Not Exist", 404));
+        }
+
+        //delete relationship
+        $relationship->delete($pdo);
+
+        //update message
+        $reply->message = "Relationship has been deleted.";
+    } else {
+        // if any other HTTP request is sent throw an exception
         throw new \InvalidArgumentException("Invalid http request", 405);
     }
     //catch any exceptions that is thrown and update the reply status and message
-} catch(\Exception | \TypeError $exception) {
+} catch (\Exception | \TypeError $exception) {
     $reply->status = $exception->getCode();
     $reply->message = $exception->getMessage();
 }
 header("Content-type: application/json");
-if($reply->data === null) {
+if ($reply->data === null) {
     unset($reply->data);
 }
 // encode and return reply to front end caller

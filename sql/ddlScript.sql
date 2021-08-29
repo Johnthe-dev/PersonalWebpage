@@ -18,3 +18,11 @@ create table relationships (
     foreign key (relationshipsSecondPost) references post(postId),
     primary key (relationshipsFirstPost, relationshipsSecondPost)
 );
+
+-- this table will contain all messages sent to me via website
+create table message (
+    messageId BINARY(16) not null,
+    messageContent TEXT not null,
+    messageDate DATETIME(6) not null,
+    primary key (messageId)
+)
