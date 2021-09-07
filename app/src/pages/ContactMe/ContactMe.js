@@ -18,6 +18,9 @@ export const ContactMe = () => {
     const [contact, setContact] = useState(false);
     const [message, setMessage] = useState("");
     const [order, setOrder] = useState(2);
+    const handleSendMessage = (message)=>{
+
+    }
     const phoneRegExp = RegExp(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/);
     const responseGenerator = (source, message) => {
         let response = '';

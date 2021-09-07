@@ -30,17 +30,18 @@ try {
     $pdo = $secrets->getPdoObject();
     //determine which HTTP method is being used.
     $method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
-    if(empty($SESSION["loginAttempts"])){
-        $SESSION["loginAttempts"] = 1;
-    }
-    if($SESSION["loginAttempts"]>5){
-        throw(new \InvalidArgumentException("Too many attempts, you have been blocked.", 429));
-    }
+
     //if method is POST handle sign-in
     if($method === "POST") {
+        if(empty($_SESSION["loginAttempts"])){
+            $_SESSION["loginAttempts"] = 1;
+        }
+        if($_SESSION["loginAttempts"]>5){
+            throw(new \InvalidArgumentException("Too many attempts, you have been blocked.", 429));
+        }
 
-        if(empty($SESSION["loginAttempts"])){
-            $SESSION["loginAttempts"] = 1;
+        if(empty($_SESSION["loginAttempts"])){
+            $_SESSION["loginAttempts"] = 1;
         }
         //make sure the XSRF Token is valid
         verifyXsrf();

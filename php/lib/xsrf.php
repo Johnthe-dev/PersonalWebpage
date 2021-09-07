@@ -44,7 +44,8 @@ function setXsrfCookie($cookiePath = "/") {
 	if(empty($_SESSION["XSRF-TOKEN"]) === true) {
 		$_SESSION["XSRF-TOKEN"] = hash("sha512", session_id() . bin2hex(openssl_random_pseudo_bytes(16)));
 	}
-	setcookie("XSRF-TOKEN", $_SESSION["XSRF-TOKEN"], 0, $cookiePath); //todo fix to include sameSite
+	setcookie("XSRF-TOKEN", $_SESSION["XSRF-TOKEN"], 0, $cookiePath);
+	//todo fix to include sameSite
 }
 /**
  * verifies the X-XSRF-TOKEN sent by React matches the XSRF-TOKEN saved in this session.
@@ -63,10 +64,10 @@ function verifyXsrf() {
 	if(array_key_exists("X-XSRF-TOKEN", $headers) === false) {
 		throw(new InvalidArgumentException("invalid XSRF token", 401));
 	}
-	$angularHeader = $headers["X-XSRF-TOKEN"];
+	$reactHeader = $headers["X-XSRF-TOKEN"];
 	// compare the XSRF token from the header with the correct token in the session
 	$correctHeader = $_SESSION["XSRF-TOKEN"];
-	if($angularHeader !== $correctHeader) {
+	if($reactHeader !== $correctHeader) {
 		throw(new InvalidArgumentException("invalid XSRF token", 401));
 	}
 }

@@ -5,10 +5,12 @@ import {getPostByPostId} from "../../shared/actions/data";
 import ReactMarkdown from 'react-markdown';
 import {httpConfig} from "../../shared/utils/http-config";
 import {AddRelation} from "../../components/AddRelation/AddRelation";
+import {UseJwt} from "../../shared/utils/JwtHelpers";
 
 export const Blog = ({match}) => {
     let data =useSelector(state => (state.data ? state.data : []));
     const dispatch = useDispatch();
+    const jwtToken = UseJwt();
     const [postId, setPostId] = useState(match.params.postId);
     //set effects and inputs for async calls
     const effects = () => {
@@ -19,12 +21,10 @@ export const Blog = ({match}) => {
         return prompt('Please enter password');
     }
     const handleDeletePosts = (postId)=>{
-        let postPassword=window.localStorage.getItem("postPassword");
-        if(!postPassword||(postPassword&&postPassword.length===0)){
-            postPassword=getPassword();
-            window.localStorage.setItem('postPassword', postPassword);
-        }
-        httpConfig.delete("/apis/post/?postId=" + postId + '&postPassword='+ postPassword, {})
+        httpConfig.delete("/apis/post/?postId=" + postId, {
+            headers: {
+                'X-JWT-TOKEN': jwtToken
+            }})
             .then(reply => {
                 if(reply.status === 200) {
                     handlePostChange('john');

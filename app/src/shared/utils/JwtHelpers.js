@@ -6,13 +6,10 @@ import {useState, useEffect} from "react";
 
 export const UseJwt = () => {
     const [jwt, setJwt] = useState(null);
+
     useEffect(() => {
-        const token = window.localStorage.getItem("jwt-token");
-        if(token !== null) {
-            const item = JSON.parse(token);
-            // compare the expiry time of the item with the current time
-            setJwt(item.value);
-        }
+        setJwt(window.localStorage.getItem("jwt-token"));
     }, [jwt]);
+
     return jwt;
 };

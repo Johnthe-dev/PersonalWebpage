@@ -1,18 +1,21 @@
-import {Button, Form, FormControl, Image, Nav, Navbar} from "react-bootstrap";
+import { Nav, Navbar} from "react-bootstrap";
 import React, {useState, useEffect} from "react";
 import {motion} from "framer-motion";
 import {PostSearch} from "../PostSearch/PostSearch";
 import {SignInModal} from "../SignInForm/SignInModal";
+import {UseJwt} from "../../shared/utils/JwtHelpers";
 
 export const Header = () => {
     const scaleFactor = 3;
     const viewed = sessionStorage.getItem('viewed');
     const [logoAnimate, setLogoAnimate] = useState({});
+    let jwtContent = UseJwt();
     const PageActive = useState({
         'Home': false,
         'Portfolio': false,
         'ContactMe': false,
-        'Blog': false
+        'Blog': false,
+        'Messages':false
     });
     let logoIconRoll = {
         hidden: {
@@ -101,6 +104,9 @@ export const Header = () => {
             break;
         case '/Blog':
             PageActive['Blog'] = true;
+            break;
+        case '/Messages':
+            PageActive['Messages'] = true;
             break;
         default:
             break;
@@ -372,9 +378,15 @@ export const Header = () => {
                             window.location = "/Blog/john"
                         }, 500)}}><p>Blog</p>
                     </Nav.Link>
+                    {jwtContent!==null&&<Nav.Link disabled={PageActive['Messages']} active={PageActive['Messages']} onClick={() => {
+                        navigate('Messages');
+                        setTimeout(() => {
+                            window.location = "/Messages"
+                        }, 500)}}><p>Messages</p>
+                    </Nav.Link>}
                 </Nav>
                 <PostSearch/>
-                <SignInModal/>
+                {jwtContent===null&&<SignInModal/>}
             </Navbar.Collapse>
         </Navbar>
     )
