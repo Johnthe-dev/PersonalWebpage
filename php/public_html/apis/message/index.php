@@ -33,7 +33,7 @@ try {
     $pdo = $secrets->getPdoObject();
     //determine which HTTP method was used
     $method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
-    validateVerifyJwt();
+
 
     //sanitize input
     $messageId = filter_input(INPUT_GET, "messageId", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -43,6 +43,7 @@ try {
         throw(new InvalidArgumentException("messageId can not be empty when deleting of changing", 400));
     }
     if($method === "GET") {
+        validateVerifyJwt();
         //set xsrf cookie
         setXsrfCookie();
         //get all messages
@@ -61,7 +62,7 @@ try {
 
         $messageDate = null;
         //create new message and insert it into the database
-        $message = new Message($messageId, $requestObject->messageContent, null);
+        $message = new Message($messageId, $requestObject->messageContent, new DateTime('now'));
         $message->insert($pdo);
         //update reply
         $reply->message = "A new Message has been created.";

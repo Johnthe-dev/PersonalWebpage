@@ -149,7 +149,7 @@ class Message implements \JsonSerializable {
      * @param string|null $newMessageDate
      * @throws \Exception if $newMessageDate is an invalid argument, out of range, has a type error, or has another exception.
      */
-    public function setMessageDate(?string $newMessageDate): void
+    public function setMessageDate(null|string|\DateTime $newMessageDate): void
     {
         //checks if $newMessageDate is null, if so set to current DateTime
         if($newMessageDate === null){

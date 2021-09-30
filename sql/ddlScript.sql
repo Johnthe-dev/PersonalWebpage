@@ -1,5 +1,6 @@
 drop table if exists relationships;
 drop table if exists post;
+drop table if exists message;
 
 -- this table will contain the posts
 create table post (

@@ -12,7 +12,9 @@ export const ViewMessages = ({match}) => {
     const dispatch = useDispatch();
     //set effects and inputs for async calls
     const effects = () => {
-        dispatch(getAllMessages(), []);
+        console.log(jwtToken);
+        dispatch(getAllMessages(jwtToken), []);
+        console.log('ran');
     };
     const handleDeleteMessages = (messageId)=>{
         httpConfig.delete("/apis/message/?messageId=" + messageId, {
@@ -25,7 +27,7 @@ export const ViewMessages = ({match}) => {
                 }
             });
     }
-    useEffect(effects, []);
+    useEffect(effects, [jwtToken]);
     return (
         jwtToken!==null?
         <Container>
@@ -42,7 +44,7 @@ export const ViewMessages = ({match}) => {
                     </Col>
                     <Col className={'col-1'}><span/></Col>
                 </Row>
-                {messages.length !== 0 && messages.map(message=>{
+                {messages && messages.length !== 0 && messages.map(message=>{
                     return(
                 <>
                     <Row id={message.messageId}>

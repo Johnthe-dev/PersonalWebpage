@@ -32,12 +32,10 @@ export const Blog = ({match}) => {
             });
     }
     const handleDeleteRelationships = (firstPost, secondPost)=>{
-        let postPassword=window.localStorage.getItem("postPassword");
-        if(!postPassword||(postPassword&&postPassword.length===0)){
-            postPassword=getPassword();
-            window.localStorage.setItem('postPassword', postPassword);
-        }
-        httpConfig.delete("/apis/relationships/?firstPost=" + firstPost + '&secondPost=' + secondPost +'&postPassword='+ postPassword, {})
+        httpConfig.delete("/apis/relationships/?firstPost=" + firstPost + '&secondPost=' + secondPost, {
+            headers: {
+                'X-JWT-TOKEN': jwtToken
+            }})
             .then(reply => {
                 if(reply.status === 200) {
                     window.location = "/Blog/" +firstPost

@@ -1,5 +1,7 @@
 import React, {useState} from "react";
-import {Container, Navbar, Nav, Col, Row, Form, Button, FormControl, Image} from "react-bootstrap";
+import {Col, Row, Button} from "react-bootstrap";
+import {httpConfig} from "../../shared/utils/http-config";
+import {UseJwt} from "../../shared/utils/JwtHelpers";
 
 export const ContactMe = () => {
     const [messages, setMessages] = useState([
@@ -13,19 +15,46 @@ export const ContactMe = () => {
             'source': 'system'
         }
     ]);
-
+    const jwtToken = UseJwt();
     const [show, setShow] = useState('d-none');
     const [contact, setContact] = useState(false);
     const [message, setMessage] = useState("");
     const [order, setOrder] = useState(2);
-    const handleSendMessage = (message)=>{
-
+    const handleSendMessage = ()=>{
+        let message= {
+            messageContent: messages.reverse().map(e =>e.message).join('<br/>')
+        }
+        httpConfig.post("/apis/message/", message)
+            .then(reply => {
+                if(reply.status === 200) {
+                    setMessages([{
+                        'order': 0,
+                        'message': "Message successfully sent!",
+                        'source': 'system'
+                    }])
+                    setTimeout(() => {
+                        window.location = "/ContactForm"
+                    }, 500)
+                } else {
+                    setMessages([
+                        ...messages, {
+                            'order': order,
+                            'message': "Some error has occurred.",
+                            'source': 'system'
+                        }
+                    ])
+                    setOrder(order+1)
+                }
+            });
     }
     const phoneRegExp = RegExp(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/);
     const responseGenerator = (source, message) => {
         let response = '';
         let lowerCaseMessage = message.toLowerCase();
         let messageWords = lowerCaseMessage.split(" ");
+        if (lowerCaseMessage.includes('send email')){
+            handleSendMessage();
+        }
         if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
             response += 'Hello to you too! '
         }
