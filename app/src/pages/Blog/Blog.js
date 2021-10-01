@@ -20,6 +20,15 @@ export const Blog = ({match}) => {
     const getPassword = ()=>{
         return prompt('Please enter password');
     }
+    const handleEditPost=()=>{
+        window.localStorage.removeItem("editPostContent");
+        window.localStorage.removeItem("editPostTitle");
+        window.localStorage.removeItem("editPostId");
+        window.localStorage.setItem("editPostContent", data.post.postContent);
+        window.localStorage.setItem("editPostTitle", data.post.postTitle);
+        window.localStorage.setItem("editPostId", data.post.postId);
+        window.location="/EditPost";
+    }
     const handleDeletePosts = (postId)=>{
         httpConfig.delete("/apis/post/?postId=" + postId, {
             headers: {
@@ -47,10 +56,12 @@ export const Blog = ({match}) => {
         <Container>
             <Row className={"py-5 justify-content-around"}>
                 <h2>Blog</h2>
-                <ButtonGroup size="lg">
+                {jwtToken&&<ButtonGroup size="lg">
+
+                    <Button variant={'info'} onClick={()=>{handleEditPost(data.post);}}>Edit</Button>
                     <Button variant={'warning'} onClick={()=>{handleDeletePosts(postId);}}>Delete</Button>
                     <Button variant={'success'} href={'/CreatePost/'+postId}>Make Child</Button>
-                </ButtonGroup>
+                </ButtonGroup>}
             </Row>
             <Row>
                 {data.post&&
@@ -110,7 +121,7 @@ export const Blog = ({match}) => {
                             <p className={'pl-3'}> No Other Relations for this post.</p>
                         }
 
-                        <AddRelation postId={postId} relations={data.related}/>
+                        {jwtToken&&<AddRelation postId={postId} relations={data.related}/>}
                     </Row>
                 </Col>
             </Row>

@@ -4,25 +4,25 @@ import ReactMarkdown from 'react-markdown';
 import {httpConfig} from "../../shared/utils/http-config";
 import {UseJwt} from "../../shared/utils/JwtHelpers";
 
-export const CreatePost = ({match}) => {
-    const postId=match.params.parent;
-    const [postContent, setPostContent] = useState('');
-    const [postTitle, setPostTitle] = useState('');
+export const EditPost = () => {
+    const postId = window.localStorage.getItem("editPostId");
+    const [postContent, setPostContent] = useState(window.localStorage.getItem("editPostContent"));
+    const [postTitle, setPostTitle] = useState(window.localStorage.getItem("editPostTitle"));
     const jwtToken = UseJwt();
-    const handlePost = (title, content)=>{
+    const editPost = ()=>{
         let data = {
             postId: postId,
-            postTitle: title,
-            postContent: content
+            postTitle: postTitle,
+            postContent: postContent
         };
-        httpConfig.post("/apis/post/", data, {
+        httpConfig.put("/apis/post/?postId="+postId, data, {
             headers: {
                 'X-JWT-TOKEN': jwtToken
             }})
             .then(reply => {
                 if(reply.status === 200) {
                     setTimeout(() => {
-                        window.location = "/Blog/" +reply.data
+                        window.location = "/Blog/" +postId;
                     }, 500)
                 }
             });
@@ -36,7 +36,7 @@ export const CreatePost = ({match}) => {
     return (
         <Container className={'pb-4'}>
             <Row className={"py-5 justify-content-around"}>
-                <h2>Create Post</h2>
+                <h2>Edit Post</h2>
             </Row>
             <Row className={"justify-content-around"}>
                 <Col className={'col-2'}>
@@ -52,13 +52,6 @@ export const CreatePost = ({match}) => {
                         <label className={'h4'} htmlFor={'postContentInput'}>Post Content</label>
                     </Row>
                     <Row className={"pb-3 justify-content-around"}>
-                        {/*<ButtonGroup className={'pb-3'} size="lg">*/}
-                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'### '); document.getElementById('')}}>Header</Button>*/}
-                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'**');}}>Bold</Button>*/}
-                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'*');}}>Italic</Button>*/}
-                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'`');}}>Code</Button>*/}
-                        {/*    <Button className={'btn-outline-secondary bg-light text-dark'} onClick={()=>{handleContentChange(postContent+'![linkTitle]('+addLink()+')');}}>Link</Button>*/}
-                        {/*</ButtonGroup>*/}
                         <textarea className={'form-control'} rows={'10'} id={'postContentInput'} value={postContent} onChange={(e)=>{handleContentChange(e.target.value)}}/>
                     </Row>
                 </Col>
@@ -73,16 +66,16 @@ export const CreatePost = ({match}) => {
                                     {postTitle}
                                 </h3>
                             </Row>
-                                <ReactMarkdown>
-                                    {postContent}
-                                </ReactMarkdown>
+                            <ReactMarkdown>
+                                {postContent}
+                            </ReactMarkdown>
                         </Col>
                     </Row>
                 </Col>
             </Row>
             <Row className={'justify-content-between'}>
                 <a href={'https://www.markdownguide.org/basic-syntax/'} target="_blank">View Markdown guide</a>
-                <Button variant={'success'} onClick={()=>{handlePost(postTitle, postContent)}}>Create Post</Button>
+                <Button variant={'success'} onClick={()=>{editPost()}}>Recreate Post</Button>
             </Row>
         </Container>
     )

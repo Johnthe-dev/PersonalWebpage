@@ -70,7 +70,6 @@ export const ContactMe = () => {
                 response += 'I have recorded ' + messageWords[i] + ' as your email address. '
                 setContact(true);
             }
-            console.log(phoneRegExp.test(messageWords[i]));
             if (phoneRegExp.test(messageWords[i])) {
                 response += 'Is ' + messageWords[i] + ' a phone number? And if so, can it receive text messages? '
                 setContact(true);

@@ -11,6 +11,8 @@ import NMSavin from "../../images/NMSavin.png"
 import ABQVeterans from "../../images/ABQVeterans.png"
 import rphiRebuild from "../../images/rphiRebuild.png"
 import resume from "../../resume/Resume.pdf"
+import cSharp from "../../images/CSharpLogo.png"
+import award from "../../images/AppContestAward.jpg"
 
 export const Portfolio = () => {
     return (
@@ -21,20 +23,46 @@ export const Portfolio = () => {
             <Row className={"pb-3 d-flex align-items-center justify-content-around"}>
                 <NavLink href={'#technologies'}>Technologies</NavLink>
                 <NavLink href={'#projects'}>Projects</NavLink>
-                <NavLink>Awards</NavLink>
+                <NavLink href={'#awards'}>Awards</NavLink>
                 <NavLink href={resume} download={resume}>Resume</NavLink>
             </Row>
             <Row className={"pt-3 d-flex align-items-center justify-content-center"}>
                 <Col className={'col-10 col-md-6 text-left'}>
                     <p>I am John Johnson-Rodgers, a web developer based out of Albuquerque, New Mexico. I am interested
-                        in
-                        projects that will have positive social impacts on our community. I take pride in my work and
+                        in projects that will have positive social impacts on our community. I take pride in my work and
                         thrive{' '}<span id={'technologies'}/>
                         while taking on challenging tasks. Message me if you are interested in working together.</p>
                 </Col>
             </Row>
             <Row className={"pb-3 pt-5 justify-content-around"}>
-                <h3>Technologies</h3>
+                <h2>Technologies</h2>
+            </Row>
+            <Row className={"pt-3 d-flex align-items-center justify-content-around"}>
+                <Col className={'col-12 col-md-3'}>
+                    <Row className={"d-flex justify-content-around"}>
+                        <Image id={'cSharpLogo'} src={cSharp}
+                               alt={'logo for c sharp'}
+                               className={'d-block p-1 logo-icon'}/>
+                    </Row>
+                    <Row className='d-md-none m-3 logo-card' aria-label='C# Technologies'>
+                        <ul>
+                            <li>API Construction</li>
+                            <li>Service Construction</li>
+                            <li>LINQ</li>
+                        </ul>
+                    </Row>
+                </Col>
+            </Row>
+            <Row className={"d-none pt-3 d-md-flex justify-content-around"}>
+                <Col className={'col-md-3 py-3 logo-card d-flex justify-content-start'}>
+                    <Row aria-label='C# Technologies'>
+                        <ul>
+                            <li>API Construction</li>
+                            <li>Service Construction</li>
+                            <li>LINQ</li>
+                        </ul>
+                    </Row>
+                </Col>
             </Row>
             <Row className={"pt-3 d-flex align-items-center justify-content-around"}>
                 <Col className={'col-12 col-md-3'}>
@@ -181,11 +209,11 @@ export const Portfolio = () => {
 
             <span id={'projects'}/>
             <Row className={"pb-md-3 pt-5 justify-content-around"}>
-                <h3>Projects</h3>
+                <h2>Public Projects</h2>
             </Row>
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center"}>
                 <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
-                    <img className="img-responsive" src={NMSavin} alt="Screen shot of NMSavin"/>
+                    <img className="w-100" src={NMSavin} alt="Screen shot of NMSavin"/>
                 </Col>
                 <Col>
                     <h4 className={'pb-3 pb-md-4 px-4'}>Victim Notification System</h4>
@@ -198,7 +226,7 @@ export const Portfolio = () => {
             </Row>
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center flex-row-reverse"}>
                 <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
-                    <img className="img-responsive" src={ABQVeterans} alt="Screen shot of ABQ Veterans"/>
+                    <img className="w-100" src={ABQVeterans} alt="Screen shot of ABQ Veterans"/>
                 </Col>
                 <Col>
                     <h4 className={'pb-3 pb-md-4 px-4'}>ABQ Veterans</h4>
@@ -210,14 +238,33 @@ export const Portfolio = () => {
             </Row>
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center"}>
                 <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
-                    <img className="img-responsive" src={rphiRebuild} alt="Screen shot of local contractor's website"/>
+                    <img className="w-100" src={rphiRebuild} alt="Screen shot of local contractor's website"/>
                 </Col>
                 <Col>
                     <h4 className={'pb-3 pb-md-4 px-4'}>Rodgers Plumbing and Heating, Inc</h4>
                     <p className={'pl-3 text-wrap'}>
                         I began my journey into web development with a redesign of the website for my father's company.
-                        The site was not mobile friendly and had an outdated design. I brought it up to date cosmetically
+                        The site was not mobile friendly and had an outdated design. <span id={'awards'}/>I brought it up to date cosmetically
                         and reduced the specificity of a few elements to remove the need for constant updates.</p>
+                </Col>
+            </Row>
+
+            <Row className={"pb-md-3 pt-5 justify-content-around"}>
+                <h2>Awards</h2>
+            </Row>
+
+            <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center flex-row-reverse"}>
+                <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
+                    <img className="w-100" src={award} alt="Celebrating Contest Victory"/>
+                </Col>
+                <Col>
+                    <h4 className={'pb-3 pb-md-4 px-4'}>
+                        <a href="https://appcontest.unm.edu/2019-2020/winners.html">UNM Mobile App Contest</a>
+                    </h4>
+                    <p className={'pr-3 text-wrap'}>
+                        Timothy Beck and I took the ABQ Veterans project to the 2020 UNM and CNM Mobile App Contest where
+                        we took the top spot amongst tough competition. We were told later that oul documentation and
+                        technical skill was what tipped the scale in our favor.</p>
                 </Col>
             </Row>
         </Container>

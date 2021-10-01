@@ -21,6 +21,7 @@ import {Testing} from "./pages/Testing/Testing"
 import {combinedReducers} from "./shared/reducers";
 import {CreatePost} from "./pages/CreatePost/CreatePost";
 import {ViewMessages} from "./pages/viewMessages/ViewMessages";
+import {EditPost} from "./pages/EditPost/EditPost";
 
 const store = createStore(combinedReducers, applyMiddleware(thunk));
 const Routing = (store) => (
@@ -43,6 +44,7 @@ const Routing = (store) => (
                                 <Route exact path='/Blog/:postId' component={Blog} postId=':postId'/>
                                 <Route exact path='/CreatePost/:parent' component={CreatePost} postId=':parent'/>
                                 <Route exact path="/Messages" component={ViewMessages}/>
+                                <Route exact path="/EditPost" component={EditPost}/>
                             </Switch>
                         </Col>
                     </Row>

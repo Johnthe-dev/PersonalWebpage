@@ -10,15 +10,16 @@ export const Home = () => {
                     <h2>Solve quotidian problems with code.</h2>
                 </Row>
                 <Row className={"mr-0 d-flex align-items-center justify-content-around pb-5"}>
-                    <Col className={'col-12 text-center'}>
+                    <Col id={'johnPictureContainer'} className={'col-12 text-center'}>
                         <img id={'johnPicture'} alt={'Picture of John'} src={headshot}/>
                     </Col>
 
-                    <Col className={'col-12 text-left'}>
+                    <Col className={'col-12 text-left pt-3'}>
                         <p>
-                            I am John Johnson-Rodgers, a full stack web
-                            application developer based in Albuquerque,
-                            New Mexico. I invite you to head to the Blog
+                            I am John Johnson-Rodgers, a .NET programmer
+                            with a background in full stack web application
+                            development based in Albuquerque, New Mexico.
+                            I invite you to head to the Blog
                             to view useful facts and resources that
                             help me with my day to day. If you would like
                             to learn about the technologies I am familiar

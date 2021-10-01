@@ -10,6 +10,7 @@ body {
     width: 100vw !important;
     font-family: 'Alata', sans-serif !important;
     font-size: large !important;
+    background-color: #FFFCF2;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -28,6 +29,9 @@ h3 {
 #headerLogo {
     height: 10vh;
     min-height: 4em;
+}
+#johnPictureContainer {
+    box-shadow: 10px 0 20em 20em rgba(255, 252, 242, 1) inset;
 }
 #johnPicture {
     max-width: 70%;

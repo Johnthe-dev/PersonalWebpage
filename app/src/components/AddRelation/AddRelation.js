@@ -43,7 +43,6 @@ export const AddRelation = (params) => {
         setRelateTerms(relateTerms);
     }
     useEffect(effects, [relateTerms]);
-    console.log(currentRelations);
     posts=posts.filter(post=>post.postId!==targetPostId&&(currentRelations?!currentRelations.some(relation=>(relation.postId === post.postId)):true))
     return (
         <>

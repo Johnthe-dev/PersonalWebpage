@@ -12,9 +12,7 @@ export const ViewMessages = ({match}) => {
     const dispatch = useDispatch();
     //set effects and inputs for async calls
     const effects = () => {
-        console.log(jwtToken);
         dispatch(getAllMessages(jwtToken), []);
-        console.log('ran');
     };
     const handleDeleteMessages = (messageId)=>{
         httpConfig.delete("/apis/message/?messageId=" + messageId, {
