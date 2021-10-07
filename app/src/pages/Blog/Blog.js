@@ -65,7 +65,7 @@ export const Blog = ({match}) => {
             </Row>
             <Row>
                 {data.post&&
-                <Col className={'col-8'}>
+                <Col className={'col-12 col-lg-8'}>
                     <Row>
                         <h3>
                             {data.post.postTitle}
@@ -75,7 +75,7 @@ export const Blog = ({match}) => {
                         {data.post.postContent}
                     </ReactMarkdown>
                 </Col>}
-                <Col className={'col-3'}>
+                <Col className={'col-12 col-lg-3'}>
                     <Row>
                         <h4 className={'pl-2'}>
                             Parents

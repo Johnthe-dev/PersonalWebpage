@@ -52,10 +52,7 @@ export const ContactMe = () => {
         let response = '';
         let lowerCaseMessage = message.toLowerCase();
         let messageWords = lowerCaseMessage.split(" ");
-        if (lowerCaseMessage.includes('send email')){
-            handleSendMessage();
-        }
-        if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
+        if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')|| lowerCaseMessage.includes('hey')) {
             response += 'Hello to you too! '
         }
         if (lowerCaseMessage.includes('coffee')) {
@@ -102,6 +99,10 @@ export const ContactMe = () => {
                 setShow('d-none');
             }, 2000);
         }
+        if (lowerCaseMessage.includes('send email')){
+            handleSendMessage();
+            return;
+        }
         setMessage('');
         setOrder(order + 2);
     }
@@ -115,6 +116,9 @@ export const ContactMe = () => {
             <Row className={'pt-3'}>
                 <Col id={'contactForm'}
                      className={'bg-light col-sm-8 col-md-6 col-lg-5 col-xl-3 d-flex flex-column-reverse overflowGone'}>
+                    <Row className={'bg-primary'}>
+                        <p>Include 'send email' in your message when you're ready to send our conversation to John. </p>
+                    </Row>
                     <Row className={'border-top border-dark py-4 bg-primary'}>
                         <Col className={'col-8 pr-1'}>
                             <input
@@ -153,28 +157,6 @@ export const ContactMe = () => {
 
                 </Col>
             </Row>
-            {/*<Row className={'pt-3'}>*/}
-            {/*    <Col id={'contactMessage'} className={'col-12-sm col-9-md col-6-lg col-3'}>*/}
-            {/*        <Row>*/}
-            {/*            <Col className={'col-8'}>*/}
-            {/*                <input*/}
-            {/*                    className="form-control"*/}
-            {/*                    id="message"*/}
-            {/*                    type="text"*/}
-            {/*                    value={message}*/}
-            {/*                    placeholder=""*/}
-            {/*                    onChange={changeHandler}*/}
-            {/*                    onKeyDown={(e) => e.key === 'Enter' && responseGenerator('user', message)}*/}
-            {/*                />*/}
-            {/*            </Col>*/}
-            {/*            <Col className={'col-4'}>*/}
-            {/*                <Button variant='success' onClick={() => {*/}
-            {/*                    responseGenerator('user', message)*/}
-            {/*                }}>Send</Button>*/}
-            {/*            </Col>*/}
-            {/*        </Row>*/}
-            {/*    </Col>*/}
-            {/*</Row>*/}
         </Col>
 
     )
