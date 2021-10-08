@@ -16,9 +16,9 @@ export const Blog = ({match}) => {
     const effects = () => {
         dispatch(getPostByPostId(postId), [postId]);
     };
-    const handlePostChange = (postId)=>{setPostId(postId);}
-    const getPassword = ()=>{
-        return prompt('Please enter password');
+    const handlePostChange = (changedPostId)=>{
+        setPostId(changedPostId);
+        window.history.pushState({"html":"https://johnthe.dev/Blog/"+changedPostId,"pageTitle":data.post.postTitle}, data.post.postTitle, "https://johnthe.dev/Blog/"+changedPostId);
     }
     const handleEditPost=()=>{
         window.localStorage.removeItem("editPostContent");
@@ -80,6 +80,8 @@ export const Blog = ({match}) => {
                         <h4 className={'pl-2'}>
                             Parents
                         </h4>
+                    </Row>
+                    <Row>
                         {data.parents&&data.parents.length>0?
                             <ul>
                                 {data.parents.map(parent => {
@@ -95,6 +97,8 @@ export const Blog = ({match}) => {
                         <h4 className={'pl-2'}>
                             Children
                         </h4>
+                    </Row>
+                    <Row>
                         {data.children&&data.children.length>0?
                             <ul>
                                 {data.children.map(child => {
@@ -110,6 +114,8 @@ export const Blog = ({match}) => {
                         <h4 className={'pl-2'}>
                             Other Relations
                         </h4>
+                    </Row>
+                    <Row>
                         {data.related&&data.related.length >0?
                             <ul>
                                 {data.related.map(relation => {

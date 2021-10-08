@@ -47,7 +47,7 @@ export const CreatePost = ({match}) => {
                 </Col>
             </Row>
             <Row className={"pt-3 justify-content-around"}>
-                <Col className={'col-5'}>
+                <Col className={'col-12 col-lg-5'}>
                     <Row className={"pt-3 justify-content-around"}>
                         <label className={'h4'} htmlFor={'postContentInput'}>Post Content</label>
                     </Row>
@@ -62,7 +62,7 @@ export const CreatePost = ({match}) => {
                         <textarea className={'form-control'} rows={'10'} id={'postContentInput'} value={postContent} onChange={(e)=>{handleContentChange(e.target.value)}}/>
                     </Row>
                 </Col>
-                <Col className={'col-5'}>
+                <Col className={'col-12 col-lg-5'}>
                     <Row className={"pt-3 justify-content-around"}>
                         <label className={'h4'} htmlFor={'postContent'}>Post Preview</label>
                     </Row>
