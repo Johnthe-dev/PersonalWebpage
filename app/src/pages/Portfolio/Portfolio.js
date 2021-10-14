@@ -263,7 +263,7 @@ export const Portfolio = () => {
                     </h4>
                     <p className={'pr-3 text-wrap'}>
                         Timothy Beck and I took the ABQ Veterans project to the 2020 UNM and CNM Mobile App Contest where
-                        we took the top spot amongst tough competition. We were told later that oul documentation and
+                        we took the top spot amongst tough competition. We were told later that our documentation and
                         technical skill was what tipped the scale in our favor.</p>
                 </Col>
             </Row>

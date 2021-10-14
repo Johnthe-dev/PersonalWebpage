@@ -351,7 +351,7 @@ export const Header = () => {
     return (
         <Navbar bg="light" expand="lg" className={'headerBorder'}>
             <Navbar.Brand href="#home">{logo}</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+            <Navbar.Toggle className="mx-auto" aria-controls="basic-navbar-nav"/>
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                     <Nav.Link disabled={PageActive['Home']} active={PageActive['Home']} onClick={() => {

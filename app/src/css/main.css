@@ -25,7 +25,9 @@ h2 {
 h3 {
     font-size: large;
 }
-
+img {
+    max-width: 80vw;
+}
 #headerLogo {
     height: 10vh;
     min-height: 4em;
