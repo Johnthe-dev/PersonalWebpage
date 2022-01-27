@@ -386,7 +386,8 @@ export const Header = () => {
                     </Nav.Link>}
                 </Nav>
                 <PostSearch/>
-                {jwtContent===null&&<SignInModal/>}
+                {jwtContent===null? <SignInModal/>:
+                <button className={'btn-danger'} onClick={()=>{window.localStorage.removeItem('jwt-token');}}>Sign Out</button>}
             </Navbar.Collapse>
         </Navbar>
     )
