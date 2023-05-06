@@ -48,7 +48,7 @@ export const Portfolio = () => {
                         <ul>
                             <li>API Construction</li>
                             <li>Service Construction</li>
-                            <li>LINQ</li>
+                            <li>.Net</li>
                         </ul>
                     </Row>
                 </Col>
@@ -59,7 +59,7 @@ export const Portfolio = () => {
                         <ul>
                             <li>API Construction</li>
                             <li>Service Construction</li>
-                            <li>LINQ</li>
+                            <li>.Net</li>
                         </ul>
                     </Row>
                 </Col>
@@ -75,7 +75,8 @@ export const Portfolio = () => {
                         <ul>
                             <li>ReactJS</li>
                             <li>Redux</li>
-                            <li>ES6</li>
+                            <li>ES6-ES10</li>
+                            <li>TypeScript</li>
                         </ul>
                     </Row>
                 </Col>
@@ -114,8 +115,9 @@ export const Portfolio = () => {
                     <Row aria-label='Javascript Technologies'>
                         <ul>
                             <li>ReactJS</li>
-                            <li>Redux</li>
-                            <li>ES6</li>
+                            <li>Angular</li>
+                            <li>ES6-ES10</li>
+                            <li>TypeScript</li>
                         </ul>
                     </Row>
                 </Col>
