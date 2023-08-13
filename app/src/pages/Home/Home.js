@@ -16,9 +16,8 @@ export const Home = () => {
 
                     <Col className={'col-12 text-left pt-3'}>
                         <p>
-                            I am John Johnson-Rodgers, a .NET programmer
-                            with a background in full stack web application
-                            development based in Albuquerque, New Mexico.
+                            I am John Johnson-Rodgers, a Full Stack Engineer with a specialty in ReactJS and .NET
+                            based in Albuquerque, New Mexico.
                             I invite you to head to the Blog
                             to view useful facts and resources that
                             help me with my day to day. If you would like

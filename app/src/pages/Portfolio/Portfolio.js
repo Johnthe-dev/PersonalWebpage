@@ -15,29 +15,23 @@ import cSharp from "../../images/CSharpLogo.png"
 import award from "../../images/AppContestAward.jpg"
 import commandCenter from "../../images/command-center.png"
 import bam from "../../images/bam.PNG"
+import reactLogo from "../../images/reactJS.png"
 
 export const Portfolio = () => {
     return (
         <Container>
             <Row className={"py-5 justify-content-around"}>
-                <h2>Happy to Help</h2>
+                <h2>Like What You See?</h2>
             </Row>
+            <span id={'technologies'}/>
             <Row className={"pb-3 d-flex align-items-center justify-content-around"}>
                 <NavLink href={'#technologies'}>Technologies</NavLink>
                 <NavLink href={'#projects'}>Projects</NavLink>
                 <NavLink href={'#awards'}>Awards</NavLink>
                 <NavLink href={resume} download={resume}>Resume</NavLink>
             </Row>
-            <Row className={"pt-3 d-flex align-items-center justify-content-center"}>
-                <Col className={'col-10 col-md-6 text-left'}>
-                    <p>I am John Johnson-Rodgers, a web developer based out of Albuquerque, New Mexico. I am interested
-                        in projects that will have positive social impacts on our community. I take pride in my work and
-                        thrive{' '}<span id={'technologies'}/>
-                        while taking on challenging tasks. Message me if you are interested in working together.</p>
-                </Col>
-            </Row>
             <Row className={"pb-3 pt-5 justify-content-around"}>
-                <h2>Technologies</h2>
+                <h3>Technologies</h3>
             </Row>
             <Row className={"pt-3 d-flex align-items-center justify-content-around"}>
                 <Col className={'col-12 col-md-3'}>
@@ -54,6 +48,20 @@ export const Portfolio = () => {
                         </ul>
                     </Row>
                 </Col>
+                <Col className={'col-12 col-md-3'}>
+                <Row className={"d-flex justify-content-around"}>
+                    <Image id={'reactLogo'} src={reactLogo}
+                           alt={'logo for ReactJS'}
+                           className={'d-block p-1 logo-icon'}/>
+                </Row>
+                <Row className='d-md-none m-3 logo-card' aria-label='ReactJS'>
+                    <ul>
+                        <li>Componentization</li>
+                        <li>State Management</li>
+                        <li>Lifecycle Management</li>
+                    </ul>
+                </Row>
+            </Col>
             </Row>
             <Row className={"d-none pt-3 d-md-flex justify-content-around"}>
                 <Col className={'col-md-3 py-3 logo-card d-flex justify-content-start'}>
@@ -65,7 +73,17 @@ export const Portfolio = () => {
                         </ul>
                     </Row>
                 </Col>
+                <Col className={'col-md-3 py-3 logo-card d-flex justify-content-start'}>
+                    <Row aria-label='ReactJs'>
+                        <ul>
+                            <li>Componentization</li>
+                            <li>State Management</li>
+                            <li>Lifecycle Management</li>
+                        </ul>
+                    </Row>
+                </Col>
             </Row>
+
             <Row className={"pt-3 d-flex align-items-center justify-content-around"}>
                 <Col className={'col-12 col-md-3'}>
                     <Row className={"d-flex justify-content-around"}>
@@ -75,8 +93,6 @@ export const Portfolio = () => {
                     </Row>
                     <Row className='d-md-none m-3 logo-card' aria-label='Javascript Technologies'>
                         <ul>
-                            <li>ReactJS</li>
-                            <li>Redux</li>
                             <li>ES6-ES10</li>
                             <li>TypeScript</li>
                         </ul>
@@ -116,8 +132,6 @@ export const Portfolio = () => {
                 <Col className={'col-md-3 py-3 logo-card d-flex justify-content-start'}>
                     <Row aria-label='Javascript Technologies'>
                         <ul>
-                            <li>ReactJS</li>
-                            <li>Angular</li>
                             <li>ES6-ES10</li>
                             <li>TypeScript</li>
                         </ul>
@@ -213,7 +227,7 @@ export const Portfolio = () => {
 
             <span id={'projects'}/>
             <Row className={"pb-md-3 pt-5 justify-content-around"}>
-                <h2>Public Projects</h2>
+                <h3>Public Projects</h3>
             </Row>
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center"}>
                 <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
@@ -289,7 +303,7 @@ export const Portfolio = () => {
             </Row>
 
             <Row className={"pb-md-3 pt-5 justify-content-around"}>
-                <h2>Awards</h2>
+                <h3>Awards</h3>
             </Row>
 
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center flex-row-reverse"}>
