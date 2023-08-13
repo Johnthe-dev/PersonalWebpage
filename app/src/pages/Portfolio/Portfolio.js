@@ -14,7 +14,7 @@ import resume from "../../resume/Resume.pdf"
 import cSharp from "../../images/CSharpLogo.png"
 import award from "../../images/AppContestAward.jpg"
 import commandCenter from "../../images/command-center.png"
-import bam from "../../images/BAM.PNG"
+import bam from "../../images/bam.PNG"
 
 export const Portfolio = () => {
     return (
