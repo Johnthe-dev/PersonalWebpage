@@ -13,12 +13,14 @@ import rphiRebuild from "../../images/rphiRebuild.png"
 import resume from "../../resume/Resume.pdf"
 import cSharp from "../../images/CSharpLogo.png"
 import award from "../../images/AppContestAward.jpg"
+import commandCenter from "../../images/command-center.png"
+import bam from "../../images/BAM.PNG"
 
 export const Portfolio = () => {
     return (
         <Container>
             <Row className={"py-5 justify-content-around"}>
-                <h2>Happy to help</h2>
+                <h2>Happy to Help</h2>
             </Row>
             <Row className={"pb-3 d-flex align-items-center justify-content-around"}>
                 <NavLink href={'#technologies'}>Technologies</NavLink>
@@ -212,6 +214,41 @@ export const Portfolio = () => {
             <span id={'projects'}/>
             <Row className={"pb-md-3 pt-5 justify-content-around"}>
                 <h2>Public Projects</h2>
+            </Row>
+            <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center"}>
+                <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
+                    <img className="w-100" src={bam} alt="Screen shot of Blue Access for Members"/>
+                </Col>
+                <Col>
+                    <h4 className={'pb-3 pb-md-4 px-4'}>Blue Access for Members (BAM)</h4>
+                    <p className={'pl-3 text-wrap'}>
+                        BAM is the member facing web applications that policy holders use to view claim details, account
+                        information, and resources for their Blue Cross Blue Shield accounts in IL, TX, MT, OK, and NM.
+                        Members can also update their Primary Care Provider, search for local pharmacies, and find
+                        pharmacies that have certain prescription drugs in stock and the price of a prescription. I
+                        acted as a senior engineer for the team that dealt with drug prices, pharmacy searches, and SSO
+                        connections to our partners. I also led the conversion to a micro-frontend architecture using
+                        single-spa, a javascript library that turns entire react projects into parcels, allowing more
+                        autonomy amongst our teams and making the initial load smaller to limit loading to what clients
+                        access.
+                    </p>
+                </Col>
+            </Row>
+            <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center flex-row-reverse"}>
+                <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
+                    <img className="w-100" src={commandCenter} alt="Screen shot of nQueue Command Center"/>
+                </Col>
+                <Col>
+                    <h4 className={'pb-3 pb-md-4 px-4'}>ScanQ Command Center</h4>
+                    <p className={'pl-3 text-wrap'}>
+                        The Command Center is on-site software used by legal firms across the globe to manage accounts,
+                        API Access, and software configuration for a suite of legal software at nqZebraworks. I helped
+                        add functionality and improve efficiency to existing features and adding new features to
+                        accommodate new products. One example of a feature that I completed was a retention policy that
+                        helped our largest clients target information and files for removal after a configurable amount
+                        of time and a service to execute the policy.
+                    </p>
+                </Col>
             </Row>
             <Row className={"pb-3 py-md-5 d-flex justify-content-around align-content-center"}>
                 <Col className="col-12 col-md-4 px-0 mx-0 pb-3 pb-md-4">
