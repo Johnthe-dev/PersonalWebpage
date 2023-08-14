@@ -15,7 +15,7 @@ import cSharp from "../../images/CSharpLogo.png"
 import award from "../../images/AppContestAward.jpg"
 import commandCenter from "../../images/command-center.png"
 import bam from "../../images/bam.PNG"
-import reactLogo from "../../reactJS.png"
+import reactLogo from "../../images/reactJS.png"
 
 export const Portfolio = () => {
     return (
